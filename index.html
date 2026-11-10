@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pustaka Manhaj Thalabul Ilmi — Budi Priyadi</title>
+<style>
+:root{--p:#0f5132;--s:#198754;--bg:#f8f9fa;--t:#212529;--b:#dee2e6}
+body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:var(--t);margin:0;line-height:1.6}
+header{background:var(--p);color:#fff;padding:2rem 1rem;text-align:center}
+header h1{margin:.4rem 0;font-size:1.8rem}
+.stats{display:inline-flex;gap:1rem;background:rgba(255,255,255,.15);padding:.4rem 1.2rem;border-radius:20px;font-size:.9rem;margin-top:.6rem}
+.wrap{max-width:1040px;margin:0 auto;padding:1.5rem 1rem}
+.sbox input{width:100%;box-sizing:border-box;padding:.8rem 1rem;border:1px solid var(--b);border-radius:8px;font-size:1rem;margin-bottom:1rem}
+.tabs{display:flex;flex-wrap:wrap;gap:.45rem;margin-bottom:1.5rem}
+.tab{background:#fff;border:1px solid var(--b);padding:.4rem .85rem;border-radius:20px;cursor:pointer;font-size:.85rem;color:#495057}
+.tab.active,.tab:hover{background:var(--p);color:#fff;border-color:var(--p);font-weight:600}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:1rem}
+.card{background:#fff;border:1px solid var(--b);border-radius:8px;padding:1.2rem;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 2px 4px rgba(0,0,0,.03)}
+.badge{display:inline-block;background:#e8f5e9;color:var(--p);font-size:.75rem;font-weight:700;padding:.2rem .6rem;border-radius:4px;margin-bottom:.5rem;width:fit-content}
+.card h3{margin:.2rem 0 1rem;font-size:1.05rem;color:#1a1a1a}
+.acts{display:flex;gap:.5rem}
+.btn{background:var(--s);color:#fff;border:none;padding:.55rem .9rem;border-radius:5px;cursor:pointer;font-weight:600;text-align:center;text-decoration:none;display:inline-block;font-size:.85rem;flex:1}
+.btn:hover{background:var(--p)}
+.tg{background:#0088cc}.tg:hover{background:#006699}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);justify-content:center;align-items:center;padding:1rem;z-index:999}
+.mbody{background:#fff;max-width:640px;width:100%;max-height:85vh;overflow-y:auto;border-radius:8px;padding:1.5rem;position:relative}
+.close{position:absolute;top:1rem;right:1rem;font-size:1.5rem;cursor:pointer;border:none;background:none}
+.arab{font-size:1.4rem;text-align:right;background:#f1f8f5;padding:1rem;border-radius:6px;margin:1rem 0;line-height:1.8}
+.prof{background:#fff;border:1px solid var(--b);border-radius:8px;padding:1.5rem;margin-top:2.5rem}
+footer{text-align:center;padding:1.5rem;color:#6c757d;font-size:.85rem;margin-top:2rem;border-top:1px solid var(--b)}
+</style>
+</head>
+<body>
+
+<header>
+<div style="font-size:1.4rem">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</div>
+<h1>Pustaka Manhaj Thalabul Ilmi</h1>
+<p>Kumpulan Materi Ringkas Aqidah, Ushul Fikih, Fikih, Hadis, Al-Quran, dan Bahasa Arab</p>
+<div class="stats"><span>📚 <strong id="cnt">168</strong> Materi Terindeks</span><span>•</span><span>🗂️ <strong>9</strong> Bidang Ilmu</span></div>
+</header>
+
+<div class="wrap">
+<div class="sbox"><input type="text" id="q" placeholder="Cari judul atau kode materi (contoh: SP-01, BA-28, Wudhu, Ijtihad)..." oninput="filterAll()"></div>
+
+<div class="tabs">
+<button class="tab active" onclick="setCat('Semua',this)">Semua Materi</button>
+<button class="tab" onclick="setCat('Aqidah & Manhaj',this)">Aqidah & Manhaj</button>
+<button class="tab" onclick="setCat('Ushul Fikih',this)">Ushul Fikih</button>
+<button class="tab" onclick="setCat('Fikih Praktis',this)">Fikih Praktis</button>
+<button class="tab" onclick="setCat('Hadis Arbain',this)">Hadis Arbain</button>
+<button class="tab" onclick="setCat('Musthalah Hadis',this)">Musthalah Hadis</button>
+<button class="tab" onclick="setCat('Hadis Hukum',this)">Hadis Hukum</button>
+<button class="tab" onclick="setCat('Nahwu & Sharaf',this)">Nahwu & Sharaf</button>
+<button class="tab" onclick="setCat('Al-Quran & Balaghah',this)">Al-Quran & Balaghah</button>
+<button class="tab" onclick="setCat('Selingan',this)">Selingan & Faedah</button>
+</div>
+
+<div class="grid" id="grid">
+<div class="card" data-c="Fikih Praktis">
+<div><span class="badge">FP-09 · Fikih Praktis</span><h3>الْغُنْمُ بِالْغُرْمِ — Keuntungan Sejalan dengan Risiko: Keadilan dalam Muamalah</h3></div>
+<div class="acts">
+<button class="btn" onclick="openM(r1)">Baca Ringkasan</button>
+<a href="https://t.me" target="_blank" class="btn tg">Telegram ↗</a>
+</div>
+</div>
+<div class="card" data-c="Ushul Fikih">
+<div><span class="badge">KUF-07 · Ushul Fikih</span><h3>Al-Ashlu fi Kulli Haditsin Taqdiruhu bi Aqrabi Zamanihi</h3></div>
+<div class="acts"><button class="btn" onclick="openM(r2)">Baca Ringkasan</button></div>
+</div>
+<div class="card" data-c="Al-Quran & Balaghah">
+<div><span class="badge">QR-16 · Al-Quran & Balaghah</span><h3>Ancaman Tajam di Balik Pertanyaan: Fa Hal Antum Muntahun?</h3></div>
+<div class="acts"><button class="btn" onclick="openM(r3)">Baca Ringkasan</button></div>
+</div>
+</div>
+
+<div class="prof">
+<h3>Tentang Pengelola</h3>
+<p><strong>Budi Priyadi, S.E., Ak., M.Ak., CA, CPA</strong> menempuh pendidikan S1 dan S2 Akuntansi di Universitas Indonesia, serta mempelajari Bahasa Arab dan Ulumul Quran di LIPIA Jakarta, Easy Arabic, Sekolah Sudan, dan LBIQ Jakarta.</p>
+<p>Kontak pembelajaran: <strong>bpriyadi82@yahoo.com</strong> | <a href="https://t.me" target="_blank">Kanal Telegram Manhaj Thalabul Ilmi ↗</a></p>
+</div>
+</div>
+
+<textarea id="rawDb" style="display:none">
+AQK-01|Aqidah & Manhaj|Mengapa Kita Harus Mengimani Azab dan Nikmat Kubur?|6
+AQK-02|Aqidah & Manhaj|Materi Aqidah & Manhaj AQK-02|10
+AQK-03|Aqidah & Manhaj|Materi Aqidah & Manhaj AQK-03|14
+AQK-04|Aqidah & Manhaj|Materi Aqidah & Manhaj AQK-04|16
+AQK-05|Aqidah & Manhaj|Materi Aqidah & Manhaj AQK-05|30
+AQK-06|Aqidah & Manhaj|Materi Aqidah & Manhaj AQK-06|48
+AQK-07|Aqidah & Manhaj|Materi Aqidah & Manhaj AQK-07|58
+FP-01|Fikih Praktis|Thaharah|65
+FP-01.1|Fikih Praktis|Thaharah — Lanjutan|66
+FP-02|Fikih Praktis|Sudahkah Wudhu Kita Sempurna?|160
+FP-03|Fikih Praktis|Apa Saja yang Membatalkan Wudhu?|170
+FP-04|Fikih Praktis|Perkara yang Diharamkan bagi yang Batal Wudhu (Hadas Kecil)|176
+FP-04.1|Fikih Praktis|Sujud Tilawah & Sujud Syukur — Haruskah Berwudhu?|179
+FP-05|Fikih Praktis|Tata Cara Lengkap Wudhu Nabi ﷺ|181
+FP-06|Fikih Praktis|الْمَسْحُ عَلَى الْخُفَّيْنِ — Mengusap Khuf|213
+FP-07|Fikih Praktis|الْجَبَائِرُ وَالْعَصَائِبُ — Bidai dan Perban|229
+FP-08.1|Fikih Praktis|الْجَنَابَةُ وَأَسْبَابُهَا — Janabah: Kapan Wajib Mandi?|264
+FP-08.2|Fikih Praktis|كَيْفِيَّةُ الْغُسْلِ مِنَ الْجَنَابَةِ — Tata Cara Mandi Janabah yang Sah dan Sempurna|276
+FP-08.3|Fikih Praktis|مَكْرُوهَاتُ الْغُسْلِ — Mandi Janabah: Hindari Pemborosan dan Jaga Air|282
+KUF-01|Ushul Fikih|Segala Perkara Bergantung pada Tujuannya|39
+KUF-02|Ushul Fikih|Manhaj Memahami Hadis-Hadis Hukum|54
+KUF-03|Ushul Fikih|Mujmal dan Mubayyan|59
+KUF-04|Ushul Fikih|Am dan Khas — Umum dan Khusus|61
+KUF-05|Ushul Fikih|Mutlak dan Muqayyad|72
+KUF-06|Ushul Fikih|Mengapa Darah Tidak Selalu Haram?|73
+UF-01|Ushul Fikih|Materi Ushul Fikih UF-01|79
+UF-02|Ushul Fikih|Materi Ushul Fikih UF-02|80
+UF-03|Ushul Fikih|Materi Ushul Fikih UF-03|81
+UF-04|Ushul Fikih|Materi Ushul Fikih UF-04|82
+UF-05|Ushul Fikih|Materi Ushul Fikih UF-05|83
+UF-06|Ushul Fikih|Materi Ushul Fikih UF-06|84
+UF-07|Ushul Fikih|Materi Ushul Fikih UF-07|85
+UF-08|Ushul Fikih|Materi Ushul Fikih UF-08|86
+UF-09|Ushul Fikih|Materi Ushul Fikih UF-09|88
+UF-10|Ushul Fikih|Manthuq dan Mafhum|91
+UF-11|Ushul Fikih|Mafhum Muwafaqah|93
+UF-12|Ushul Fikih|Mafhum Mukhalafah|105
+UF-13|Ushul Fikih|Materi Ushul Fikih UF-13|107
+UF-14|Ushul Fikih|Tark Nabi ﷺ|109
+UF-15|Ushul Fikih|Adam ar-Riwayah dan Tark|110
+UF-16|Ushul Fikih|Batas Kehujjahan Tark|114
+UF-17|Ushul Fikih|Ijma|115
+UF-18|Ushul Fikih|Qiyas|116
+UF-19|Ushul Fikih|Illat Hukum|122
+UF-20|Ushul Fikih|Tahqiq al-Manath — Memastikan Illat pada Kasus Nyata|125
+UF-21|Ushul Fikih|Maslahah dan Urf|128
+UF-22|Ushul Fikih|Istishhab|130
+UF-23|Ushul Fikih|Sadd adz-Dzarai — Menutup Jalan Menuju yang Haram|132
+UF-24|Ushul Fikih|Istihsan — Memilih Dalil yang Lebih Kuat dan Lebih Maslahat|134
+UF-25|Ushul Fikih|Qaul Sahabat — Pendapat Sahabat sebagai Dalil|137
+UF-26|Ushul Fikih|شَرْعُ مَنْ قَبْلِنَا — Syariat Umat Sebelum Kita|143
+UF-27|Ushul Fikih|الِاسْتِقْرَاءُ — Al-Istiqra|155
+UF-28|Ushul Fikih|مَقَاصِدُ الشَّرِيعَةِ — Maqashid asy-Syariah|158
+UF-29|Ushul Fikih|الضَّرُورِيَّاتُ وَالْحَاجِيَّاتُ وَالتَّحْسِينِيَّاتُ — Tiga Tingkatan Kebutuhan dalam Syariat|162
+UF-30|Ushul Fikih|الْمُوَازَنَةُ بَيْنَ الْمَصَالِحِ وَالْمَفَاسِدِ — Menimbang Maslahat dan Mafsadat|169
+UF-31|Ushul Fikih|اعْتِبَارُ مَآلَاتِ الْأَفْعَالِ — Mempertimbangkan Akibat Suatu Perbuatan|180
+UF-32|Ushul Fikih|الْوَسَائِلُ وَالْمَقَاصِدُ — Sarana untuk Melaksanakan Perintah|185
+UF-33|Ushul Fikih|تَعَارُضُ الْأَدِلَّةِ — Ketika Dua Dalil Tampak Bertentangan|219
+UF-34|Ushul Fikih|الْجَمْعُ بَيْنَ الْأَدِلَّةِ — Ketika Dua Hadis Tampak Bertentangan|220
+UF-34.1|Ushul Fikih|الْجَمْعُ بَيْنَ الْأَدِلَّةِ — Jamu Dalil: Sahkah Rakaat Makmum Masbuk Tanpa Al-Fatihah?|236
+UF-35|Ushul Fikih|النَّسْخُ — Nasakh: Mengapa Hukum Syariat Bisa Berubah?|237
+UF-36|Ushul Fikih|التَّرْجِيحُ — Tarjih: Bagaimana Ulama Menentukan Dalil yang Lebih Kuat?|248
+UF-37|Ushul Fikih|الْاِجْتِهَادُ — Ijtihad: Siapa yang Boleh Menggali Hukum dari Dalil?|274
+UF-38|Ushul Fikih|التَّقْلِيدُ وَالِاتِّبَاعُ — Taqlid dan Ittiba: Di Mana Batasannya?|275
+UF-39|Ushul Fikih|الْفَتْوَى وَالِاسْتِفْتَاءُ — Jika Ulama Berbeda Fatwa Kita Ikut Siapa?|279
+UF-40|Ushul Fikih|تَغَيُّرُ الِاجْتِهَادِ وَالْفَتْوَى — Mengapa Pendapat Ulama dan Fatwa Dapat Berubah?|284
+BA-01|Nahwu & Sharaf|Nahwu, Sharaf, dan Irab|67
+BA-02|Nahwu & Sharaf|Jenis-Jenis Isim|68
+BA-03|Nahwu & Sharaf|Jenis Isim Tingkat Lanjut|189
+BA-04|Nahwu & Sharaf|Mengenal Isim-Isim Turunan|190
+BA-05|Nahwu & Sharaf|Isim Murab dan Mabni|191
+BA-06|Nahwu & Sharaf|Isim-Isim yang Marfu|192
+BA-07|Nahwu & Sharaf|Isim-Isim yang Manshub|193
+BA-08|Nahwu & Sharaf|Isim-Isim yang Majrur|194
+BA-09|Nahwu & Sharaf|Jenis-Jenis Isim Marifah|195
+BA-10|Nahwu & Sharaf|Mengenal Isim Nakirah|196
+BA-11|Nahwu & Sharaf|Mengenal Isim Alam|197
+BA-12|Nahwu & Sharaf|Isim Maqshur, Manqush, dan Mamdud|198
+BA-13|Nahwu & Sharaf|Mengenal Al-Asma Al-Khamsah|199
+BA-14|Nahwu & Sharaf|Mengenal Isim Ghair Munsharif|200
+BA-15|Nahwu & Sharaf|Isim Jamid dan Isim Musytaq|201
+BA-16|Nahwu & Sharaf|Mengenal Tawabi — Kata yang Mengikuti Irab|202
+BA-17|Nahwu & Sharaf|Bagaimana Mengenali Isim?|203
+BA-18|Nahwu & Sharaf|Tanda-Tanda Irab pada Isim|204
+BA-19|Nahwu & Sharaf|Isim Mufrad, Mutsanna, dan Jamak|205
+BA-20|Nahwu & Sharaf|Mengenal Jenis-Jenis Jamak|206
+BA-21|Nahwu & Sharaf|Mengenal Isim Mudzakkar dan Muannats|207
+BA-22|Nahwu & Sharaf|Mengenal Jumlah Ismiyyah|208
+BA-23|Nahwu & Sharaf|Mengenal Jumlah Filiyyah|209
+BA-24|Nahwu & Sharaf|Mengenal Tiga Jenis Fiil|210
+BA-25|Nahwu & Sharaf|Bagaimana Mengenali Fiil?|211
+BA-26|Nahwu & Sharaf|إِعْرَابُ الْفِعْلِ الْمُضَارِعِ — Mengenal Irab Fiil Mudhari|214
+BA-27|Nahwu & Sharaf|الْأَفْعَالُ الْخَمْسَةُ — Mengenal Afal Khamsah|
+BA-28|Nahwu & Sharaf|الْفِعْلُ الْمُعْتَلُّ الْآخِرِ — Mengapa Huruf Terakhir Fiil Bisa Hilang?|240
+SP-01|Nahwu & Sharaf|عِلْمُ الصَّرْفِ — Mengenal Ilmu Sharaf|296
+SP-02|Nahwu & Sharaf|الْفِعْلُ الْمَاضِي وَالْمُضَارِعُ وَالْأَمْرُ — Mengenal Fiil Madhi Mudhari dan Amr|297
+SP-03|Nahwu & Sharaf|الْجَذْرُ اللُّغَوِيُّ وَالْوَزْنُ الصَّرْفِيُّ — Mengenal Akar Kata dan Wazan|298
+SP-04|Nahwu & Sharaf|التَّصْرِيفُ الِاصْطِلَاحِيُّ — Mengenal Tashrif Istilahi|299
+HA-01|Hadis Arbain|Hadis Pertama — Niat|3
+HA-02|Hadis Arbain|Hadis Kedua — Hadis Jibril|9
+HA-03|Hadis Arbain|Hadis Ketiga — Rukun Islam|12
+HA-04|Hadis Arbain|Hadis Keempat — Tahapan Penciptaan Manusia|22
+HA-05|Hadis Arbain|Hadis Kelima — Larangan Mengada-adakan Agama|31
+HA-06|Hadis Arbain|Hadis Keenam — Halal, Haram, dan Syubhat|56
+HA-IRAB-01|Hadis Arbain|Irab Hadis Pertama — Niat|5
+HA-IRAB-02|Hadis Arbain|Irab Hadis Arbain 2|11
+HA-IRAB-03|Hadis Arbain|Irab Hadis Arbain 3|13
+HA-IRAB-04|Hadis Arbain|Irab Hadis Arbain 4|28
+HA-IRAB-05|Hadis Arbain|Irab Hadis Arbain 5|32
+HA-IRAB-06|Hadis Arbain|Irab Hadis Arbain 6|57
+HH-01|Hadis Hukum|Kedudukan Sunnah|64
+MH-01|Musthalah Hadis|Pengertian Musthalah Hadis|62
+MH-02|Musthalah Hadis|Perawi, Marwi, Sanad, dan Matan|75
+TMH-01|Musthalah Hadis|Khabar|90
+TMH-02|Musthalah Hadis|Hadis Mutawatir|99
+TMH-03|Musthalah Hadis|Khabar Ahad|106
+TMH-04|Musthalah Hadis|Hadis Masyhur|118
+TMH-05|Musthalah Hadis|Hadis Aziz|124
+TMH-06|Musthalah Hadis|Hadis Gharib|127
+TMH-07|Musthalah Hadis|Hadis Shahih|129
+TMH-08|Musthalah Hadis|Hadis Hasan|131
+TMH-09|Musthalah Hadis|Hadis Shahih li-Ghairih|133
+TMH-10|Musthalah Hadis|Hadis Hasan li-Ghairih|141
+QR-11.1|Al-Quran & Balaghah|Balaghah Al-Quran|53
+QR-13.1|Al-Quran & Balaghah|Perintah Bershalawat kepada Nabi ﷺ|60
+QR-13.2|Al-Quran & Balaghah|Keutamaan Bershalawat kepada Nabi ﷺ|70
+QR-13.3|Al-Quran & Balaghah|Pentingnya Ilmu Nahwu dalam Memahami Al-Quran|136
+QR-14|Al-Quran & Balaghah|بَلَاغَةُ الْبَسْمَلَةِ — Rahasia Balaghah di Balik Singkatnya Basmalah|261
+QR-15|Al-Quran & Balaghah|Keindahan Doa Dua Nabi|262
+SL-01|Selingan|Tahukah Anda? Makna Tauhid|33
+SL-02|Selingan|Mencintai Nabi ﷺ|34
+SL-03|Selingan|Keutamaan Berbagi Ilmu|270
+SL-04|Selingan|Bedanya Fikih dan Ushul Fikih|36
+SL-05|Selingan|Maulid Nabi ﷺ dalam Analisis Ushul Fikih|37
+SL-06|Selingan|Tebak Ilmu: Manakah yang Termasuk Fiil?|38
+SL-07|Selingan|15 Macam Waw (و)|45
+SL-08|Selingan|Faedah 1 Menit: Rabbi Zidni Ilma|46
+SL-09|Selingan|Fatwa Dar al-Ifta dan Al-Azhar tentang Maulid Nabi ﷺ|47
+SL-10|Selingan|Rindu kepada Rasulullah ﷺ|49
+SL-11|Selingan|Rasulullah ﷺ Merindukan Kita|51
+SL-12|Selingan|Adab Ketika Azan|52
+SL-13|Selingan|Merindukan Rasulullah ﷺ|55
+SL-14|Selingan|Menulis Ilmu Menjadi Pelopor Kebaikan|63
+SL-15|Selingan|Ilmu Sebelum Amal|69
+SL-16|Selingan|Jangan Malu Berkata Saya Tidak Tahu|71
+SL-17|Selingan|Berkahnya Waktu Pagi|76
+SL-18|Selingan|Pentingnya Ushul Fikih dan Musthalah Hadis dalam Istinbath Hukum|100
+SL-19|Selingan|Bisakah Keluarga Berkumpul Kembali di Surga?|139
+SL-20|Selingan|Keutamaan Menuntut Ilmu|123
+SL-21|Selingan|Keutamaan Mengamalkan Ilmu|272
+SL-22|Selingan|Tiga Tanda Ilmu yang Bermanfaat|140
+SL-23|Selingan|Mari Mulai Membaca Kitab Ushul Fikih|146
+SL-24|Selingan|Tabayyun Sebelum Menyebarkan|153
+SL-25|Selingan|Menjaga Shalat Wajib — Jalan Menuju Surga|269
+SL-26|Selingan|Menjaga Lisan — Tanda Kesempurnaan Iman|273
+SL-27|Selingan|Mengenal Pustaka Manhaj Thalabul Ilmi|150
+SL-28|Selingan|Doa Memohon Afiyah — Lengkap|157
+SL-29|Selingan|Mari Terus Belajar — Pustaka Manhaj Thalabul Ilmi|159
+SL-30|Selingan|Menjulurkan Kaki ke Arah Kiblat|171
+SL-31|Selingan|Jangan Remehkan Kebaikan, Walau Separuh Kurma|182
+SL-32|Selingan|Dua Ilmu Penting dalam Memahami Agama — Ushul Fikih & Musthalah Hadis|249
+SL-33|Selingan|5 Langkah Belajar Musthalah Hadis|251
+SL-34|Selingan|Al-Bayquniyyah — Bait 1–17|253
+SL-35|Selingan|Al-Bayquniyyah — Bait 18–34 (Bagian 1)|256
+SL-35.2|Selingan|Al-Bayquniyyah — Bait 18–34 (Bagian 2)|257
+SL-36|Selingan|Belajar Memahami Fatwa Para Ulama — Urutan Kitab dari Mudah hingga Mendalam|295
+</textarea>
+
+<div class="modal" id="mod" onclick="if(event.target===this)this.style.display='none'">
+<div class="mbody">
+<button class="close" onclick="document.getElementById('mod').style.display='none'">×</button>
+<span class="badge" id="mb"></span>
+<h2 id="mt" style="margin-top:.5rem"></h2>
+<div class="arab" id="ma"></div>
+<div id="mi"></div>
+<hr style="margin:1.5rem 0;border:0;border-top:1px solid #eee">
+<button class="btn" onclick="copyWA()">📋 Salin Teks Siap WhatsApp</button>
+</div>
+</div>
+
+<footer>&copy; 2026 Pustaka Manhaj Thalabul Ilmi — Belajar dengan tertib, memahami dengan jernih.</footer>
+
+<script>
+const r1 = {k:"FP-09 · Fikih Praktis",t:"Al-Ghunmu bil-Ghurmi — Keuntungan Sejalan dengan Risiko",a:"الغُنْمُ بِالغُرْمِ",i:"<p><strong>Artinya:</strong> Keuntungan (hak) itu sebanding dengan risiko (tanggung jawab) yang ditanggung.</p><p><strong>Contoh Penerapan:</strong> Jika jamaah sudah membayar DP umrah dengan akad harga tetap di awal (tanpa klausul perubahan harga), pihak travel tidak boleh menaikkan biaya secara sepihak saat tiket/kurs naik. Sebagaimana travel berhak untung jika harga turun, mereka juga wajib menanggung risiko kenaikan biaya.</p><p><strong>Rujukan:</strong> Majallah Al-Ahkam Al-Adliyyah Pasal 87 & Al-Wajiz fi Idhah Qawaid Al-Fiqh Al-Kulliyyah (Hal. 365).</p>"};
+const r2 = {k:"KUF-07 · Ushul Fikih",t:"Al-Ashlu fi Kulli Haditsin Taqdiruhu bi Aqrabi Zamanihi",a:"الأَصْلُ فِي كُلِّ حَادِثٍ تَقْدِيرُهُ بِأَقْرَبِ زَمَنِهِ",i:"<p><strong>Artinya:</strong> Prinsip dasar pada setiap peristiwa baru adalah diperkirakan terjadi pada waktu yang paling dekat dengan masa sekarang.</p><p><strong>Contoh Penerapan:</strong> Jika seseorang mendapati najis di pakaian setelah salat Zuhur dan ragu apakah najis itu kena sebelum atau sesudah Zuhur, maka najis dianggap baru kena di waktu terdekat (setelah Zuhur). Salat Zuhurnya tetap sah.</p>"};
+const r3 = {k:"QR-16 · Al-Quran & Balaghah",t:"Ancaman Tajam di Balik Pertanyaan: Fa Hal Antum Muntahun?",a:"فَهَلْ أَنتُم مُّنتَهُونَ",i:"<p><strong>Analisis Balaghah:</strong> Kata tanya <em>Hal</em> pada akhir QS. Al-Maidah: 91 ini bukan pertanyaan biasa, melainkan perintah tegas berbalut ancaman (<em>Al-Amr maa at-Tahdid</em>) yang bermakna: Berhentilah kalian sekarang juga!.</p><p>Penggunaan jumlah ismiyyah (<em>antum muntahun</em>) menuntut berhenti secara total dan permanen dari khamar dan judi.</p>"};
+
+const grid = document.getElementById('grid');
+const lines = document.getElementById('rawDb').value.trim().split('\n');
+lines.forEach(line => {
+    const p = line.split('|');
+    if (p.length < 3) return;
+    const kode = p.shift().trim();
+    const bidang = p.shift().trim();
+    const judul = p.shift().trim();
+    const postId = p.length ? p.shift().trim() : '';
+    const div = document.createElement('div');
+    div.className = 'card';
+    div.setAttribute('data-c', bidang);
+    const url = postId ? 'https://t.me' + postId : 'https://t.me';
+    div.innerHTML = '<div><span class="badge">' + kode + ' · ' + bidang + '</span><h3>' + judul + '</h3></div><div class="acts"><a href="' + url + '" target="_blank" class="btn tg">Buka di Telegram ↗</a></div>';
+    grid.appendChild(div);
+});
+document.getElementById('cnt').innerText = document.querySelectorAll('#grid .card').length;
+
+let curCat = 'Semua', curItem = null;
+function setCat(c, el) {
+    curCat = c;
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    filterAll();
+}
+function filterAll() {
+    const q = document.getElementById('q').value.toLowerCase();
+    document.querySelectorAll('#grid .card').forEach(card => {
+        const okCat = (curCat === 'Semua' || card.getAttribute('data-c') === curCat);
+        const okTxt = card.innerText.toLowerCase().includes(q);
+        card.style.display = (okCat && okTxt) ? 'flex' : 'none';
+    });
+}
+function openM(obj) {
+    curItem = obj;
+    document.getElementById('mb').innerText = curItem.k;
+    document.getElementById('mt').innerText = curItem.t;
+    document.getElementById('ma').innerText = curItem.a;
+    document.getElementById('mi').innerHTML = curItem.i;
+    document.getElementById('mod').style.display = 'flex';
+}
+function copyWA() {
+    if (!curItem) return;
+    const d = document.createElement('div');
+    d.innerHTML = curItem.i;
+    const wa = '*Assalamualaikum Warahmatullahi Wabarakatuh*\n\n*' + curItem.t.toUpperCase() + '*\n_(' + curItem.k + ')_\n\n*' + curItem.a + '*\n\n' + d.innerText + '\n\n_Sumber: https://netlify.app_\n*Wassalamualaikum Warahmatullahi Wabarakatuh*';
+    navigator.clipboard.writeText(wa).then(() => alert('Teks kajian berhasil disalin! Silakan Paste di WhatsApp.'));
+}
+</script>
+</body>
+</html>
+<button class="tab" onclick="setCat('Selingan',this)">Selingan & Faedah</button>
+
+
+
