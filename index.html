@@ -281,7 +281,9 @@ lines.forEach(line => {
     const div = document.createElement('div');
     div.className = 'card';
     div.setAttribute('data-c', bidang);
-    const url = postId ? 'https://t.me' + postId : 'https://t.me';
+        const tgBase = 'https:' + '//t.me/manhaj_thalabu_ilmi';
+    const url = postId ? tgBase + '/' + postId : tgBase;
+;
     div.innerHTML = '<div><span class="badge">' + kode + ' · ' + bidang + '</span><h3>' + judul + '</h3></div><div class="acts"><a href="' + url + '" target="_blank" class="btn tg">Buka di Telegram ↗</a></div>';
     grid.appendChild(div);
 });
