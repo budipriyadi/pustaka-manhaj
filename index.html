@@ -381,5 +381,63 @@ c.style.display=((curCat==='Semua'||c.getAttribute('data-c')===curCat)&&c.innerT
 }
 function openM(o){curItem=o;document.getElementById('mb').innerText=o.k;document.getElementById('mt').innerText=o.t;document.getElementById('ma').innerText=o.a;document.getElementById('mi').innerHTML=o.i;document.getElementById('mod').style.display='flex';}
 function copyWA(){if(!curItem)return;const d=document.createElement('div');d.innerHTML=curItem.i;navigator.clipboard.writeText('*Assalamualaikum Warahmatullahi Wabarakatuh*\n\n*'+curItem.t.toUpperCase()+'*\n_('+curItem.k+')_\n\n*'+curItem.a+'*\n\n'+d.innerText+'\n\n_Sumber: https:'+'//budipriyadi.github.io/pustaka-manhaj/_\n*Wassalamualaikum Warahmatullahi Wabarakatuh*').then(()=>alert('Teks kajian berhasil disalin!'));}
+<script>
+const r1={k:"FP-09 · Fikih Praktis",t:"Al-Ghunmu bil-Ghurmi — Keuntungan Sejalan dengan Risiko",a:"الغُنْمُ بِالغُرْمِ",i:"<p><strong>Artinya:</strong> Keuntungan (hak) itu sebanding dengan risiko (tanggung jawab) yang ditanggung.</p><p><strong>Contoh Penerapan:</strong> Jika jamaah sudah membayar DP umrah dengan akad harga tetap di awal (tanpa klausul perubahan harga), pihak travel tidak boleh menaikkan biaya secara sepihak saat tiket/kurs naik. Sebagaimana travel berhak untung jika harga turun, mereka juga wajib menanggung risiko kenaikan biaya.</p><p><strong>Rujukan:</strong> Majallah Al-Ahkam Al-Adliyyah Pasal 87 & Al-Wajiz fi Idhah Qawaid Al-Fiqh Al-Kulliyyah (Hal. 365).</p>"};
+const r2={k:"KUF-07 · Ushul Fikih",t:"Al-Ashlu fi Kulli Haditsin Taqdiruhu bi Aqrabi Zamanihi",a:"الأَصْلُ فِي كُلِّ حَادِثٍ تَقْدِيرُهُ بِأَقْرَبِ زَمَنِهِ",i:"<p><strong>Artinya:</strong> Prinsip dasar pada setiap peristiwa baru adalah diperkirakan terjadi pada waktu yang paling dekat dengan masa sekarang.</p><p><strong>Contoh Penerapan:</strong> Jika seseorang mendapati najis di pakaian setelah salat Zuhur dan ragu apakah najis itu kena sebelum atau sesudah Zuhur, maka najis dianggap baru kena di waktu terdekat (setelah Zuhur). Salat Zuhurnya tetap sah.</p>"};
+const r3={k:"QR-16 · Al-Quran & Balaghah",t:"Ancaman Tajam di Balik Pertanyaan: Fa Hal Antum Muntahun?",a:"فَهَلْ أَنتُم مُّنتَهُونَ",i:"<p><strong>Analisis Balaghah:</strong> Kata tanya <em>Hal</em> pada akhir QS. Al-Maidah: 91 ini bukan pertanyaan biasa, melainkan perintah tegas berbalut ancaman (<em>Al-Amr maa at-Tahdid</em>) yang bermakna: Berhentilah kalian sekarang juga!.</p><p>Penggunaan jumlah ismiyyah (<em>antum muntahun</em>) menuntut berhenti secara total dan permanen dari khamar dan judi.</p>"};
+const grid=document.getElementById('grid');
+const kitabGroups=[{code:'IA',name:'Ilmu Al-Qur\'an',icon:'📖',items:[]},{code:'IH',name:'Ilmu Hadis',icon:'🕌',items:[]},{code:'BG',name:'Ilmu Balaghah',icon:'✒️',items:[]},{code:'NSI',name:'Nahwu, Sharaf & I\'rab',icon:'🟢',items:[]},{code:'AQ',name:'Aqidah',icon:'🛡️',items:[]},{code:'FQ',name:'Fikih & Ushul Fikih',icon:'⚖️',items:[]},{code:'DK',name:'Dakwah & Khutbah',icon:'🎤',items:[]},{code:'BA',name:'Bahasa Arab',icon:'🗣️',items:[]}];
+document.getElementById('rawDb').value.trim().split('\n').forEach(l=>{
+const p=l.split('|');if(p.length<3)return;
+const k=p.shift().trim(),b=p.shift().trim(),j=p.shift().trim(),id=p.length?p.shift().trim():'';
+if(b==='Koleksi Kitab'){
+const prefix=k.split('-').shift();
+const grp=kitabGroups.find(g=>g.code===prefix)||kitabGroups.find(g=>g.code==='FQ');
+const u=id?'https:'+'//://google.com';
+grp.items.push({k,j,u});
+}else{
+const d=document.createElement('div');d.className='card';d.setAttribute('data-c',b);
+const u=id?'https:'+'//t.me/manhaj_thalabu_ilmi/'+id:'https:'+'//t.me/manhaj_thalabu_ilmi';
+d.innerHTML='<div><span class="badge">'+k+' · '+b+'</span><h3>'+j+'</h3></div><div class="acts"><a href="'+u+'" target="_blank" class="btn tg">Buka di Telegram ↗</a></div>';
+grid.appendChild(d);
+}
+});
+const kWrap=document.createElement('div');
+kWrap.className='k-grid';kWrap.id='kitabPanel';kWrap.style.display='none';
+kitabGroups.forEach(g=>{
+if(!g.items.length)return;
+const box=document.createElement('div');box.className='k-box';
+const listHtml=g.items.map(it=>'<div class="k-item"><span><strong>'+it.k+'</strong> — '+it.j+'</span><a href="'+it.u+'" target="_blank" class="k-btn">Unduh / Baca ↗</a></div>').join('');
+box.innerHTML='<div class="k-head" onclick="this.parentElement.classList.toggle(\'open\')"><div class="k-title"><span>'+g.icon+'</span><span class="k-code">'+g.code+'</span><span>'+g.name+'</span></div><div class="k-meta"><span>'+g.items.length+'</span><span>Lihat rincian ⌄</span></div></div><div class="k-list">'+listHtml+'</div>';
+kWrap.appendChild(box);
+});
+grid.prepend(kWrap);
+const totalKitab=kitabGroups.reduce((s,g)=>s+g.items.length,0);
+document.getElementById('cnt').innerText=document.querySelectorAll('#grid .card').length+totalKitab;
+let curCat='Semua',curItem=null;
+function setCat(c,el){curCat=c;document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');filterAll();}
+function filterAll(){
+const q=document.getElementById('q').value.toLowerCase();
+const showKitab=(curCat==='Koleksi Kitab'||q.length>0);
+kWrap.style.display=showKitab?'grid':'none';
+kWrap.querySelectorAll('.k-box').forEach(box=>{
+let matchCount=0;
+box.querySelectorAll('.k-item').forEach(it=>{
+const ok=!q||it.innerText.toLowerCase().includes(q);
+it.style.display=ok?'flex':'none';
+if(ok)matchCount++;
+});
+box.style.display=matchCount?'block':'none';
+if(q&&matchCount)box.classList.add('open');
+else if(!q)box.classList.remove('open');
+});
+document.querySelectorAll('#grid .card').forEach(c=>{
+if(curCat==='Koleksi Kitab'){c.style.display='none';return;}
+c.style.display=((curCat==='Semua'||c.getAttribute('data-c')===curCat)&&c.innerText.toLowerCase().includes(q))?'flex':'none';
+});
+}
+function openM(o){curItem=o;document.getElementById('mb').innerText=o.k;document.getElementById('mt').innerText=o.t;document.getElementById('ma').innerText=o.a;document.getElementById('mi').innerHTML=o.i;document.getElementById('mod').style.display='flex';}
+function copyWA(){if(!curItem)return;const d=document.createElement('div');d.innerHTML=curItem.i;navigator.clipboard.writeText('*Assalamualaikum Warahmatullahi Wabarakatuh*\n\n*'+curItem.t.toUpperCase()+'*\n_('+curItem.k+')_\n\n*'+curItem.a+'*\n\n'+d.innerText+'\n\n_Sumber: https:'+'//budipriyadi.github.io/pustaka-manhaj/_\n*Wassalamualaikum Warahmatullahi Wabarakatuh*').then(()=>alert('Teks kajian berhasil disalin!'));}
 </script>
+</body>
 </html>
