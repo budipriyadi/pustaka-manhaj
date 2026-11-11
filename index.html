@@ -380,4 +380,6 @@ c.style.display=((curCat==='Semua'||c.getAttribute('data-c')===curCat)&&c.innerT
 });
 }
 function openM(o){curItem=o;document.getElementById('mb').innerText=o.k;document.getElementById('mt').innerText=o.t;document.getElementById('ma').innerText=o.a;document.getElementById('mi').innerHTML=o.i;document.getElementById('mod').style.display='flex';}
+function copyWA(){if(!curItem)return;const d=document.createElement('div');d.innerHTML=curItem.i;navigator.clipboard.writeText('*Assalamualaikum Warahmatullahi Wabarakatuh*\n\n*'+curItem.t.toUpperCase()+'*\n_('+curItem.k+')_\n\n*'+curItem.a+'*\n\n'+d.innerText+'\n\n_Sumber: https:'+'//budipriyadi.github.io/pustaka-manhaj/_\n*Wassalamualaikum Warahmatullahi Wabarakatuh*').then(()=>alert('Teks kajian berhasil disalin!'));}
+</script>
 </html>
