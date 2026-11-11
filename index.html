@@ -359,7 +359,7 @@ const k=p.shift().trim(),b=p.shift().trim(),j=p.shift().trim(),id=p.length?p.shi
 if(b==='Koleksi Kitab'){
 const prefix=k.split('-').shift();
 const grp=kitabGroups.find(g=>g.code===prefix)||kitabGroups.find(g=>g.code==='FQ');
-const u=id?'https:'+'//drive.'+'://google.com';
+const u=id?['https:/','://google.com'].join('/'):['https:/','t.me/manhaj_thalabu_ilmi'].join('/');
 grp.items.push({k,j,u});
 }else{
 const d=document.createElement('div');d.className='card';d.setAttribute('data-c',b);
