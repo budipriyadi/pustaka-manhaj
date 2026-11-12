@@ -517,23 +517,24 @@ const mObs=new MutationObserver(()=>{
   const box=document.querySelector('#mBody,#modalBody,.m-body,.modal-body,#modal .box,.modal-content');
   if(box && !box.dataset.numDone){
     box.dataset.numDone='1';
-  <script>
-const origOpenM=window.openM;
-window.openM=function(item){
-  if(item && item.i && !item.i.includes('data-num="1"')){
-    let n=1;
-    item.i=item.i.replace(/<p>([\s\S]*?)<\/p>/gi,function(match,inner){
-      const plain=inner.replace(/<[^>]+>/g,'').trim();
-      if(!plain || /^Artinya\.|^Rujukan|^Kesimpulan/i.test(plain) || /^\d+[\.\)]/.test(plain)){
-        return '<p data-num="1">'+inner+'</p>';
-      }
-      return '<p data-num="1"><strong>'+(n++)+'.</strong> '+inner+'</p>';
-    });
-  }
-  if(typeof origOpenM==='function') origOpenM(item);
-};
-
+ <script>
 document.addEventListener('click',function(e){
+  const bacaBtn=e.target.closest('button');
+  if(bacaBtn && bacaBtn.innerText.includes('Baca Ringkasan')){
+    setTimeout(()=>{
+      const salinBtn=Array.from(document.querySelectorAll('button')).find(b=>b.innerText.includes('Salin Teks') && b.offsetParent!==null);
+      if(!salinBtn)return;
+      const box=salinBtn.parentElement;
+      const ps=Array.from(box.querySelectorAll('p'));
+      let n=1;
+      ps.forEach(p=>{
+        const txt=p.innerText.trim();
+        if(!txt || /^Artinya\.|^Rujukan|^Kesimpulan/i.test(txt) || /^\d+[\.\)]/.test(txt)) return;
+        p.innerHTML='<strong>'+(n++)+'.</strong> '+p.innerHTML;
+      });
+    },50);
+    return;
+  }
   const btn=e.target.closest('button');
   if(!btn || !btn.innerText.includes('Salin Teks')) return;
   e.preventDefault();
@@ -566,6 +567,10 @@ document.addEventListener('click',function(e){
   });
 },true);
 </script>
+
+</body>
+</html>
+
 
 </body>
 </html>
