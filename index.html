@@ -468,8 +468,43 @@ window.addEventListener('scroll',function(){
 const b=document.getElementById('topBtn');
 if(b)b.style.display=window.scrollY>300?'block':'none';
 });
+<script>
+document.addEventListener('click',function(e){
+  const btn=e.target.closest('button');
+  if(!btn || !btn.innerText.includes('Salin Teks')) return;
+  e.preventDefault();
+  e.stopImmediatePropagation();
+  const box=btn.parentElement;
+  const k=(box.querySelector('.badge,[class*="badge"]')||{}).innerText||'';
+  const t=(box.querySelector('h2,h3')||{}).innerText||'';
+  const a=(box.querySelector('.arab,[class*="arab"],[dir="rtl"]')||{}).innerText||'';
+  const ps=Array.from(box.querySelectorAll('p, li'));
+  const isi=ps.map((p,idx)=>{
+    let teksP=p.innerHTML
+      .replace(/<strong[^>]*>(.*?)<\/strong>/gi,'*$1*')
+      .replace(/<b[^>]*>(.*?)<\/b>/gi,'*$1*')
+      .replace(/<em[^>]*>(.*?)<\/em>/gi,'_$1_')
+      .replace(/<i[^>]*>(.*?)<\/i>/gi,'_$1_')
+      .replace(/<br\s*\/?>/gi,'\n')
+      .replace(/<[^>]+>/g,'')
+      .trim();
+    if(!teksP)return '';
+    return /^\*?\d+[\.\)]/.test(teksP)?teksP:'*'+(idx+1)+'.* '+teksP;
+  }).filter(Boolean).join('\n\n');
+  const teks='*Assalamualaikum Warahmatullahi Wabarakatuh*\n\n'
+    +(t?'*'+t.toUpperCase()+'*\n':'')
+    +(k?'_('+k+')_\n\n':'\n')
+    +(a?'*'+a+'*\n\n':'')
+    +isi+'\n\n'
+    +'_Sumber:_\nhttps://github.io\n'
+    +'*Wassalamualaikum Warahmatullahi Wabarakatuh*';
+  navigator.clipboard.writeText(teks).then(()=>{
+    const asli=btn.innerHTML;
+    btn.innerText='✅ Tersalin Rapi untuk WhatsApp!';
+    setTimeout(()=>btn.innerHTML=asli,2000);
+  });
+},true);
 </script>
-
 </body>
 </html>
 
