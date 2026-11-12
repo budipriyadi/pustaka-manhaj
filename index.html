@@ -428,23 +428,39 @@ c.style.display=((curCat==='Semua'||c.getAttribute('data-c')===curCat)&&c.innerT
 }
 function openM(o){curItem=o;document.getElementById('mb').innerText=o.k;document.getElementById('mt').innerText=o.t;document.getElementById('ma').innerText=o.a;document.getElementById('mi').innerHTML=o.i;document.getElementById('mod').style.display='flex';}
 function copyWA(){
-  if(!curM)return;
-  let isi=curM.i
-    .replace(/<\/p>\s*<p>/gi,'\n\n')
-    .replace(/<br\s*\/?>/gi,'\n')
-    .replace(/<strong>(.*?)<\/strong>/gi,'*$1*')
-    .replace(/<em>(.*?)<\/em>/gi,'_$1_')
-    .replace(/<[^>]+>/g,'')
-    .trim();
+  const m=document.querySelector('#modal, .modal, [id*="modal" i]');
+  if(!m)return;
+  const k=(m.querySelector('.badge,[class*="badge"]')||{}).innerText||'';
+  const t=(m.querySelector('h2,h3')||{}).innerText||'';
+  const a=(m.querySelector('.arab,[class*="arab"],[dir="rtl"]')||{}).innerText||'';
+  const bodyEl=m.querySelector('#mBody,#modalBody,.m-body,.modal-body')||m;
+  const ps=Array.from(bodyEl.querySelectorAll('p'));
+  let isi='';
+  if(ps.length){
+    isi=ps.map(p=>{
+      let html=p.innerHTML
+        .replace(/<strong[^>]*>(.*?)<\/strong>/gi,'*$1*')
+        .replace(/<b[^>]*>(.*?)<\/b>/gi,'*$1*')
+        .replace(/<em[^>]*>(.*?)<\/em>/gi,'_$1_')
+        .replace(/<i[^>]*>(.*?)<\/i>/gi,'_$1_')
+        .replace(/<br\s*\/?>/gi,'\n')
+        .replace(/<[^>]+>/g,'')
+        .trim();
+      return html;
+    }).filter(Boolean).join('\n\n');
+  }else{
+    isi=bodyEl.innerText.trim();
+  }
   let teks='*Assalamualaikum Warahmatullahi Wabarakatuh*\n\n'
-    +'*'+curM.t.toUpperCase()+'*\n'
-    +'_('+curM.k+')_\n\n'
-    +(curM.a?'*'+curM.a+'*\n\n':'')
+    +(t?'*'+t.toUpperCase()+'*\n':'')
+    +(k?'_('+k+')_\n\n':'\n')
+    +(a?'*'+a+'*\n\n':'')
     +isi+'\n\n'
     +'_Sumber: https://budipriyadi.github.io/pustaka-manhaj/_\n'
     +'*Wassalamualaikum Warahmatullahi Wabarakatuh*';
   navigator.clipboard.writeText(teks).then(()=>alert('Teks siap WhatsApp berhasil disalin!'));
 }
+
 </script>
   <button id="topBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Kembali ke atas" style="display:none;position:fixed;bottom:24px;right:24px;z-index:999;width:46px;height:46px;border:none;border-radius:50%;background:#1e6b43;color:#fff;font-size:20px;font-weight:bold;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.25);transition:opacity .2s">↑</button>
 <script>
