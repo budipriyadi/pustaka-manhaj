@@ -517,14 +517,18 @@ const mObs=new MutationObserver(()=>{
   const box=document.querySelector('#mBody,#modalBody,.m-body,.modal-body,#modal .box,.modal-content');
   if(box && !box.dataset.numDone){
     box.dataset.numDone='1';
- <script>
+<script>
 document.addEventListener('click',function(e){
   const bacaBtn=e.target.closest('button');
   if(bacaBtn && bacaBtn.innerText.includes('Baca Ringkasan')){
     setTimeout(()=>{
       const salinBtn=Array.from(document.querySelectorAll('button')).find(b=>b.innerText.includes('Salin Teks') && b.offsetParent!==null);
       if(!salinBtn)return;
-      const box=salinBtn.parentElement;
+      let box=salinBtn.parentElement;
+      while(box && box.querySelectorAll('p').length===0 && box.parentElement!==document.body){
+        box=box.parentElement;
+      }
+      if(!box)return;
       const ps=Array.from(box.querySelectorAll('p'));
       let n=1;
       ps.forEach(p=>{
@@ -539,7 +543,10 @@ document.addEventListener('click',function(e){
   if(!btn || !btn.innerText.includes('Salin Teks')) return;
   e.preventDefault();
   e.stopImmediatePropagation();
-  const box=btn.parentElement;
+  let box=btn.parentElement;
+  while(box && box.querySelectorAll('p').length===0 && box.parentElement!==document.body){
+    box=box.parentElement;
+  }
   const k=(box.querySelector('.badge,[class*="badge"]')||{}).innerText||'';
   const t=(box.querySelector('h2,h3')||{}).innerText||'';
   const a=(box.querySelector('.arab,[class*="arab"],[dir="rtl"]')||{}).innerText||'';
@@ -570,6 +577,7 @@ document.addEventListener('click',function(e){
 
 </body>
 </html>
+
 
 
 </body>
