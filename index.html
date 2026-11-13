@@ -474,81 +474,12 @@ document.addEventListener('click',function(e){
   if(!btn || !btn.innerText.includes('Salin Teks')) return;
   e.preventDefault();
   e.stopImmediatePropagation();
-  const box=btn.parentElement;
-  const k=(box.querySelector('.badge,[class*="badge"]')||{}).innerText||'';
-  const t=(box.querySelector('h2,h3')||{}).innerText||'';
-  const a=(box.querySelector('.arab,[class*="arab"],[dir="rtl"]')||{}).innerText||'';
-  const ps=Array.from(box.querySelectorAll('p, li'));
-  const isi=ps.map((p,idx)=>{
-    let teksP=p.innerHTML
-      .replace(/<strong[^>]*>(.*?)<\/strong>/gi,'*$1*')
-      .replace(/<b[^>]*>(.*?)<\/b>/gi,'*$1*')
-      .replace(/<em[^>]*>(.*?)<\/em>/gi,'_$1_')
-      .replace(/<i[^>]*>(.*?)<\/i>/gi,'_$1_')
-      .replace(/<br\s*\/?>/gi,'\n')
-      .replace(/<[^>]+>/g,'')
-      .trim();
-    if(!teksP)return '';
-    return /^\*?\d+[\.\)]/.test(teksP)?teksP:'*'+(idx+1)+'.* '+teksP;
-  }).filter(Boolean).join('\n\n');
-  const teks='*Assalamualaikum Warahmatullahi Wabarakatuh*\n\n'
-    +(t?'*'+t.toUpperCase()+'*\n':'')
-    +(k?'_('+k+')_\n\n':'\n')
-    +(a?'*'+a+'*\n\n':'')
-    +isi+'\n\n'
- +'_Sumber:_\nhttps://budipriyadi'+'.github'+'.io/pustaka-manhaj/\n'
-    +'*Wassalamualaikum Warahmatullahi Wabarakatuh*';
-  navigator.clipboard.writeText(teks).then(()=>{
-    const asli=btn.innerHTML;
-    btn.innerText='✅ Tersalin Rapi untuk WhatsApp!';
-    setTimeout(()=>btn.innerHTML=asli,2000);
-  });
-},true);
-<script>
-function formatNumbered(container){
-  const ps=Array.from(container.querySelectorAll('p'));
-  let n=1;
-  ps.forEach(p=>{
-    const txt=p.innerText.trim();
-    if(!txt || /^Artinya\.|^Rujukan/i.test(txt) || /^\d+[\.\)]/.test(txt)) return;
-    p.innerHTML='<strong>'+(n++)+'.</strong> '+p.innerHTML;
-  });
-}
-const mObs=new MutationObserver(()=>{
-  const box=document.querySelector('#mBody,#modalBody,.m-body,.modal-body,#modal .box,.modal-content');
-  if(box && !box.dataset.numDone){
-    box.dataset.numDone='1';
-<script>
-document.addEventListener('click',function(e){
-  const bacaBtn=e.target.closest('button');
-  if(bacaBtn && bacaBtn.innerText.includes('Baca Ringkasan')){
-    setTimeout(()=>{
-      const salinBtn=Array.from(document.querySelectorAll('button')).find(b=>b.innerText.includes('Salin Teks') && b.offsetParent!==null);
-      if(!salinBtn)return;
-      let box=salinBtn.parentElement;
-      while(box && box.querySelectorAll('p').length===0 && box.parentElement!==document.body){
-        box=box.parentElement;
-      }
-      if(!box)return;
-      const ps=Array.from(box.querySelectorAll('p'));
-      let n=1;
-      ps.forEach(p=>{
-        const txt=p.innerText.trim();
-        if(!txt || /^Artinya\.|^Rujukan|^Kesimpulan/i.test(txt) || /^\d+[\.\)]/.test(txt)) return;
-        p.innerHTML='<strong>'+(n++)+'.</strong> '+p.innerHTML;
-      });
-    },50);
-    return;
-  }
-  const btn=e.target.closest('button');
-  if(!btn || !btn.innerText.includes('Salin Teks')) return;
-  e.preventDefault();
-  e.stopImmediatePropagation();
   let box=btn.parentElement;
   while(box && box.querySelectorAll('p').length===0 && box.parentElement!==document.body){
     box=box.parentElement;
   }
   const k=(box.querySelector('.badge,[class*="badge"]')||{}).innerText||'';
+  const kode=k.split('·')[0].trim();
   const t=(box.querySelector('h2,h3')||{}).innerText||'';
   const a=(box.querySelector('.arab,[class*="arab"],[dir="rtl"]')||{}).innerText||'';
   const ps=Array.from(box.querySelectorAll('p, li'));
@@ -561,12 +492,13 @@ document.addEventListener('click',function(e){
     .replace(/<[^>]+>/g,'')
     .trim()
   ).filter(Boolean).join('\n\n');
+  const linkMateri='https://budipriyadi'+'.github'+'.io/pustaka-manhaj/'+(kode?'?m='+encodeURIComponent(kode):'');
   const teks='*Assalamualaikum Warahmatullahi Wabarakatuh*\n\n'
     +(t?'*'+t.toUpperCase()+'*\n':'')
     +(k?'_('+k+')_\n\n':'\n')
     +(a?'*'+a+'*\n\n':'')
     +isi+'\n\n'
-    +'_Sumber:_\nhttps://budipriyadi'+'.github'+'.io/pustaka-manhaj/\n'
+    +'_Sumber:_\n'+linkMateri+'\n'
     +'*Wassalamualaikum Warahmatullahi Wabarakatuh*';
   navigator.clipboard.writeText(teks).then(()=>{
     const asli=btn.innerHTML;
@@ -574,6 +506,23 @@ document.addEventListener('click',function(e){
     setTimeout(()=>btn.innerHTML=asli,2000);
   });
 },true);
+
+window.addEventListener('load',function(){
+  const mKode=new URLSearchParams(window.location.search).get('m');
+  if(!mKode)return;
+  const target=mKode.trim().toUpperCase();
+  const cards=Array.from(document.querySelectorAll('.card'));
+  const found=cards.find(c=>{
+    const b=c.querySelector('.badge');
+    return b && b.innerText.toUpperCase().startsWith(target+' ');
+  });
+  if(found){
+    found.scrollIntoView({behavior:'smooth',block:'center'});
+    found.style.outline='3px solid #1e6b43';
+    const bacaBtn=found.querySelector('button');
+    if(bacaBtn) setTimeout(()=>bacaBtn.click(),250);
+  }
+});
 </script>
 
 <button id="topBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Kembali ke atas" style="display:none;position:fixed;bottom:24px;right:24px;z-index:999;width:46px;height:46px;border:none;border-radius:50%;background:#1e6b43;color:#fff;font-size:20px;font-weight:bold;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.25);transition:opacity .2s">↑</button>
@@ -586,6 +535,3 @@ window.addEventListener('scroll',function(){
 
 </body>
 </html>
-
-
-
