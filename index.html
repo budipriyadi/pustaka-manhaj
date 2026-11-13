@@ -370,6 +370,12 @@ const r1={k:"FP-09 · Fikih Praktis",t:"Al-Ghunmu bil-Ghurmi — Keuntungan Seja
 const r2={k:"KUF-07 · Ushul Fikih",t:"Al-Ashlu fi Kulli Haditsin Taqdiruhu bi Aqrabi Zamanihi",a:"الأَصْلُ فِي كُلِّ حَادِثٍ تَقْدِيرُهُ بِأَقْرَبِ زَمَنِهِ",i:"<p><strong>Artinya:</strong> Prinsip dasar pada setiap peristiwa baru adalah diperkirakan terjadi pada waktu yang paling dekat dengan masa sekarang.</p><p><strong>Contoh Penerapan:</strong> Jika seseorang mendapati najis di pakaian setelah salat Zuhur dan ragu apakah najis itu kena sebelum atau sesudah Zuhur, maka najis dianggap baru kena di waktu terdekat (setelah Zuhur). Salat Zuhurnya tetap sah.</p>"};
 const r3={k:"QR-16 · Al-Quran & Balaghah",t:"Ancaman Tajam di Balik Pertanyaan Al-Qur’an",a:"فَهَلْ أَنْتُمْ مُنْتَهُونَ",i:"<p><strong>Artinya.</strong> “Maka tidakkah kamu mau berhenti?” (QS. Al-Mā’idah: 91)</p><p><strong>1. Rahasia Balāghah.</strong> Menggunakan <em>istifhām</em> bermakna teguran keras (زَجْرٌ) yang menegaskan perintah: اِنْتَهُوا! (“Berhentilah!”). Susunan <em>jumlah ismiyyah</em> (أَنْتُمْ مُنْتَهُونَ) dengan أَنْتُمْ sebagai mubtada’ dan مُنْتَهُونَ sebagai khabar marfū‘ sekaligus isim fā‘il memperkuat tuntutan untuk meninggalkan larangan.</p><p><strong>2. Mengapa Tegurannya Begitu Tegas?</strong> Khamar dan judi menimbulkan permusuhan dan kebencian, menghalangi dari mengingat Allah, serta melalaikan dari salat. Dalam riwayat disebutkan bahwa Umar رضي الله عنه menjawab: اِنْتَهَيْنَا، اِنْتَهَيْنَا (“Kami telah berhenti, kami telah berhenti”).</p><p><strong>3. Hikmah Belajar Balāghah.</strong> Nahwu memahami susunan kalimat, Sharaf memahami bentuk kata, I‘rāb memahami kedudukan kata, dan Balāghah memahami maksud serta kekuatan ungkapan.</p><p><strong>Rujukan Tafsir.</strong> Tafsir Ibnu Katsir dan Tafsir Al-Qurṭubī (QS. Al-Mā’idah: 91).</p>"};
 const grid=document.getElementById('grid');
+const materiByCode=new Map();
+function linkMateri(kode){
+  const url=new URL(window.location.pathname,window.location.origin);
+  url.searchParams.set('m',kode);
+  return url.href;
+}
 const kitabGroups=[{code:'IA',name:'Ilmu Al-Qur\'an',icon:'📖',items:[]},{code:'IH',name:'Ilmu Hadis',icon:'🕌',items:[]},{code:'BG',name:'Ilmu Balaghah',icon:'✒️',items:[]},{code:'NSI',name:'Nahwu, Sharaf & I\'rab',icon:'🟢',items:[]},{code:'AQ',name:'Aqidah',icon:'🛡️',items:[]},{code:'FQ',name:'Fikih & Ushul Fikih',icon:'⚖️',items:[]},{code:'DK',name:'Dakwah & Khutbah',icon:'🎤',items:[]},{code:'BA',name:'Bahasa Arab',icon:'🗣️',items:[]}];
 document.getElementById('rawDb').value.trim().split('\n').forEach(l=>{
 const p=l.split('|');if(p.length<3)return;
@@ -383,9 +389,11 @@ grp.items.push({k,j,u});
 const arab=p.length?p.shift().trim():'',ringkas=p.length?p.join('|').trim():'';
 const d=document.createElement('div');d.className='card';d.setAttribute('data-c',b);
 const u=id?'https://t'+'.me/manhaj_thalabu_ilmi/'+id:'https://t'+'.me/manhaj_thalabu_ilmi';
-let acts='<a href="'+u+'" target="_blank" class="btn tg">Telegram ↗</a>';
+const materi={k:k+' · '+b,t:j,a:arab,i:ringkas};
+materiByCode.set(k.toUpperCase(),{card:d,materi});
+let acts='<a class="btn" href="'+linkMateri(k)+'" aria-label="Tautan langsung '+k+'">Tautan Materi</a><a href="'+u+'" target="_blank" class="btn tg">Telegram ↗</a>';
 if(ringkas){
-const obj={k:k+' · '+b,t:j,a:arab,i:ringkas};
+const obj=materi;
 const idx=window.rList?window.rList.push(obj)-1:(window.rList=[obj],0);
 acts='<button class="btn" onclick="openM(window.rList['+idx+'])">Baca Ringkasan</button>'+acts;
 }
@@ -428,60 +436,11 @@ c.style.display=((curCat==='Semua'||c.getAttribute('data-c')===curCat)&&c.innerT
 });
 }
 function openM(o){curItem=o;document.getElementById('mb').innerText=o.k;document.getElementById('mt').innerText=o.t;document.getElementById('ma').innerText=o.a;document.getElementById('mi').innerHTML=o.i;document.getElementById('mod').style.display='flex';}
-function copyWA(){
-  const m=document.querySelector('#modal, .modal, [id*="modal" i]');
-  if(!m)return;
-  const k=(m.querySelector('.badge,[class*="badge"]')||{}).innerText||'';
-  const t=(m.querySelector('h2,h3')||{}).innerText||'';
-  const a=(m.querySelector('.arab,[class*="arab"],[dir="rtl"]')||{}).innerText||'';
-  const bodyEl=m.querySelector('#mBody,#modalBody,.m-body,.modal-body')||m;
-  const ps=Array.from(bodyEl.querySelectorAll('p'));
-  let isi='';
-  if(ps.length){
-    isi=ps.map(p=>{
-      let html=p.innerHTML
-        .replace(/<strong[^>]*>(.*?)<\/strong>/gi,'*$1*')
-        .replace(/<b[^>]*>(.*?)<\/b>/gi,'*$1*')
-        .replace(/<em[^>]*>(.*?)<\/em>/gi,'_$1_')
-        .replace(/<i[^>]*>(.*?)<\/i>/gi,'_$1_')
-        .replace(/<br\s*\/?>/gi,'\n')
-        .replace(/<[^>]+>/g,'')
-        .trim();
-      return html;
-    }).filter(Boolean).join('\n\n');
-  }else{
-    isi=bodyEl.innerText.trim();
-  }
-  let teks='*Assalamualaikum Warahmatullahi Wabarakatuh*\n\n'
-    +(t?'*'+t.toUpperCase()+'*\n':'')
-    +(k?'_('+k+')_\n\n':'\n')
-    +(a?'*'+a+'*\n\n':'')
-    +isi+'\n\n'
-    +'_Sumber: https://budipriyadi.github.io/pustaka-manhaj/_\n'
-    +'*Wassalamualaikum Warahmatullahi Wabarakatuh*';
-  navigator.clipboard.writeText(teks).then(()=>alert('Teks siap WhatsApp berhasil disalin!'));
-}
-</script>
-  <button id="topBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Kembali ke atas" style="display:none;position:fixed;bottom:24px;right:24px;z-index:999;width:46px;height:46px;border:none;border-radius:50%;background:#1e6b43;color:#fff;font-size:20px;font-weight:bold;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.25);transition:opacity .2s">↑</button>
-<script>
-window.addEventListener('scroll',function(){
-const b=document.getElementById('topBtn');
-if(b)b.style.display=window.scrollY>300?'block':'none';
-});
-<script>
-document.addEventListener('click',function(e){
-  const btn=e.target.closest('button');
-  if(!btn || !btn.innerText.includes('Salin Teks')) return;
-  e.preventDefault();
-  e.stopImmediatePropagation();
-  let box=btn.parentElement;
-  while(box && box.querySelectorAll('p').length===0 && box.parentElement!==document.body){
-    box=box.parentElement;
-  }
-  const k=(box.querySelector('.badge,[class*="badge"]')||{}).innerText||'';
-  const kode=(k.split('·')[0]||'').trim();
-  const t=(box.querySelector('h2,h3')||{}).innerText||'';
-  const a=(box.querySelector('.arab,[class*="arab"],[dir="rtl"]')||{}).innerText||'';
+async function copyWA(){
+  if(!curItem)return;
+  const {k,t,a}=curItem;
+  const kode=k.split('·')[0].trim();
+  const box=document.getElementById('mi');
   const ps=Array.from(box.querySelectorAll('p, li'));
   const isi=ps.map(p=>p.innerHTML
     .replace(/<strong[^>]*>(.*?)<\/strong>/gi,'*$1*')
@@ -492,44 +451,26 @@ document.addEventListener('click',function(e){
     .replace(/<[^>]+>/g,'')
     .trim()
   ).filter(Boolean).join('\n\n');
-  const linkMateri='https://budipriyadi'+'.github'+'.io/pustaka-manhaj/'+(kode?'?m='+encodeURIComponent(kode):'');
   const teks='*Assalamualaikum Warahmatullahi Wabarakatuh*\n\n'
     +(t?'*'+t.toUpperCase()+'*\n':'')
     +(k?'_('+k+')_\n\n':'\n')
     +(a?'*'+a+'*\n\n':'')
     +isi+'\n\n'
-    +'_Sumber:_\n'+linkMateri+'\n'
+    +'_Sumber:_\n' +linkMateri(kode)+'\n'
     +'*Wassalamualaikum Warahmatullahi Wabarakatuh*';
-  navigator.clipboard.writeText(teks).then(()=>{
-    const asli=btn.innerHTML;
-    btn.innerText='✅ Tersalin Rapi untuk WhatsApp!';
-    setTimeout(()=>btn.innerHTML=asli,2000);
-  });
-},true);
+  await navigator.clipboard.writeText(teks);
+  alert('Teks siap WhatsApp berhasil disalin!');
+}
 
-(function bukaMateriDariLink(){
-  const mKode=new URLSearchParams(window.location.search).get('m');
-  if(!mKode)return;
-  const target=mKode.trim().toUpperCase();
-  let percobaan=0;
-  const cek=setInterval(()=>{
-    percobaan++;
-    const cards=Array.from(document.querySelectorAll('.card'));
-    const found=cards.find(c=>{
-      const b=c.querySelector('.badge');
-      return b && b.innerText.trim().toUpperCase().startsWith(target+' ');
-    });
-    if(found){
-      clearInterval(cek);
-      found.scrollIntoView({behavior:'smooth',block:'center'});
-      found.style.outline='3px solid #1e6b43';
-      const bacaBtn=found.querySelector('button');
-      if(bacaBtn) setTimeout(()=>bacaBtn.click(),150);
-    }else if(percobaan>30){
-      clearInterval(cek);
-    }
-  },100);
-})();
+function bukaMateriDariLink(){
+  const kode=new URLSearchParams(window.location.search).get('m');
+  const target=materiByCode.get((kode||'').trim().toUpperCase());
+  if(!target)return;
+  target.card.scrollIntoView({block:'center'});
+  target.card.style.outline='3px solid #1e6b43';
+  if(target.materi.i)openM(target.materi);
+}
+bukaMateriDariLink();
 </script>
 
 <button id="topBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Kembali ke atas" style="display:none;position:fixed;bottom:24px;right:24px;z-index:999;width:46px;height:46px;border:none;border-radius:50%;background:#1e6b43;color:#fff;font-size:20px;font-weight:bold;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.25);transition:opacity .2s">↑</button>
