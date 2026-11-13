@@ -479,7 +479,7 @@ document.addEventListener('click',function(e){
     box=box.parentElement;
   }
   const k=(box.querySelector('.badge,[class*="badge"]')||{}).innerText||'';
-  const kode=k.split('·')[0].trim();
+  const kode=(k.split('·')[0]||'').trim();
   const t=(box.querySelector('h2,h3')||{}).innerText||'';
   const a=(box.querySelector('.arab,[class*="arab"],[dir="rtl"]')||{}).innerText||'';
   const ps=Array.from(box.querySelectorAll('p, li'));
@@ -507,22 +507,29 @@ document.addEventListener('click',function(e){
   });
 },true);
 
-window.addEventListener('load',function(){
+(function bukaMateriDariLink(){
   const mKode=new URLSearchParams(window.location.search).get('m');
   if(!mKode)return;
   const target=mKode.trim().toUpperCase();
-  const cards=Array.from(document.querySelectorAll('.card'));
-  const found=cards.find(c=>{
-    const b=c.querySelector('.badge');
-    return b && b.innerText.toUpperCase().startsWith(target+' ');
-  });
-  if(found){
-    found.scrollIntoView({behavior:'smooth',block:'center'});
-    found.style.outline='3px solid #1e6b43';
-    const bacaBtn=found.querySelector('button');
-    if(bacaBtn) setTimeout(()=>bacaBtn.click(),250);
-  }
-});
+  let percobaan=0;
+  const cek=setInterval(()=>{
+    percobaan++;
+    const cards=Array.from(document.querySelectorAll('.card'));
+    const found=cards.find(c=>{
+      const b=c.querySelector('.badge');
+      return b && b.innerText.trim().toUpperCase().startsWith(target+' ');
+    });
+    if(found){
+      clearInterval(cek);
+      found.scrollIntoView({behavior:'smooth',block:'center'});
+      found.style.outline='3px solid #1e6b43';
+      const bacaBtn=found.querySelector('button');
+      if(bacaBtn) setTimeout(()=>bacaBtn.click(),150);
+    }else if(percobaan>30){
+      clearInterval(cek);
+    }
+  },100);
+})();
 </script>
 
 <button id="topBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Kembali ke atas" style="display:none;position:fixed;bottom:24px;right:24px;z-index:999;width:46px;height:46px;border:none;border-radius:50%;background:#1e6b43;color:#fff;font-size:20px;font-weight:bold;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.25);transition:opacity .2s">↑</button>
