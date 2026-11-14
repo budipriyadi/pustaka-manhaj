@@ -580,6 +580,68 @@ function pilihKategori(nama){
   if(tab){tab.click();tab.scrollIntoView({behavior:'smooth',block:'center'});}
 }
 </script>
+<script>
+(function initMateriPendukungAkurat(){
+  const petaPendukung={
+    'Aqidah & Manhaj':['SL-01','SL-02','SL-10','SL-11','SL-13','SL-19'],
+    'Ushul Fikih':['SL-04','SL-05','SL-18','SL-23','SL-32','SL-36'],
+    'Fikih Praktis':['SL-04','SL-09','SL-12','SL-25','SL-30'],
+    'Musthalah Hadis':['SL-18','SL-32','SL-33','SL-34','SL-35','SL-35.2'],
+    'Nahwu & Sharaf':['SL-06','SL-07'],
+    'Hadis Arbain':['SL-24','SL-26','SL-31']
+  };
+
+  function renderPendukung(kategori){
+    let box=document.getElementById('materiPendukungBox');
+    if(box) box.remove();
+    const daftarKode=petaPendukung[kategori];
+    if(!daftarKode || !daftarKode.length) return;
+
+    const semuaKartu=Array.from(document.querySelectorAll('.card'));
+    const kartuTerkait=daftarKode.map(kd=>semuaKartu.find(c=>{
+      const b=c.querySelector('.badge');
+      if(!b) return false;
+      const kodeKartu=(b.innerText.split('·').shift()||'').trim().toUpperCase();
+      return kodeKartu===kd.toUpperCase();
+    })).filter(Boolean);
+
+    if(!kartuTerkait.length) return;
+
+    const container=semuaKartu.parentElement;
+    box=document.createElement('div');
+    box.id='materiPendukungBox';
+    box.style.cssText='grid-column:1/-1;margin-top:24px;padding-top:18px;border-top:1.5px solid var(--border,#e2e8f0)';
+    box.innerHTML=`
+      <h3 style="margin:0 0 4px;font-size:1.15rem;color:var(--text,#1e293b)">📚 Materi Pendukung Lintas Modul</h3>
+      <p style="margin:0 0 14px;font-size:.86rem;color:var(--muted,#64748b)">Bacaan penguat pilihan yang berkaitan erat setelah mempelajari seri utama di atas.</p>
+      <div id="gridPendukung" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px"></div>
+    `;
+    container.appendChild(box);
+
+    const grid=box.querySelector('#gridPendukung');
+    kartuTerkait.forEach(asal=>{
+      const klon=asal.cloneNode(true);
+      klon.style.display='flex';
+      const btnAsal=asal.querySelector('button');
+      const btnKlon=klon.querySelector('button');
+      if(btnAsal && btnKlon) btnKlon.onclick=()=>btnAsal.click();
+      grid.appendChild(klon);
+    });
+  }
+
+  document.addEventListener('click',e=>{
+    const tab=e.target.closest('button');
+    if(!tab) return;
+    const nama=tab.innerText.trim();
+    if(petaPendukung[nama]){
+      setTimeout(()=>renderPendukung(nama),60);
+    }else if(nama.startsWith('Semua') || tab.closest('.cats, [class*="cat"]')){
+      const old=document.getElementById('materiPendukungBox');
+      if(old) old.remove();
+    }
+  });
+})();
+</script>
 
 </body>
 </html>
