@@ -792,7 +792,7 @@ function pilihKategori(nama){
 </script>
 <style>
   .kartu-transisi {
-    transition: background 1.2s ease, border 1.2s ease, box-shadow 1.2s ease, transform 0.8s ease !important;
+    transition: background 1.5s ease, border 1.5s ease, box-shadow 1.5s ease, transform 1s ease !important;
   }
 
   .modul-sorot-aktif {
@@ -810,7 +810,7 @@ function pilihKategori(nama){
     font-weight: 700 !important;
     padding: 4px 10px !important;
     border-radius: 6px !important;
-    transition: all 1s ease !important;
+    transition: all 1.2s ease !important;
   }
 
   .label-materi-terkait {
@@ -825,7 +825,7 @@ function pilihKategori(nama){
     border-radius: 999px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
     z-index: 2;
-    transition: opacity 0.8s ease;
+    transition: opacity 1s ease;
   }
 </style>
 
@@ -836,9 +836,21 @@ function pilihKategori(nama){
   if (!kodeTarget) return;
 
   let sudahDihapus = false;
+  let sedangProsesHapus = false;
   let pernahBukaTelegram = false;
   let sudahScrollAwal = false;
   let observer = null;
+
+  function cariKartuDariElemen(elAwal) {
+    let kartu = elAwal;
+    while (kartu && kartu !== document.body) {
+      if (kartu.querySelector("button, a") && kartu.offsetHeight > 100 && kartu.offsetWidth < 600) {
+        return kartu;
+      }
+      kartu = kartu.parentElement;
+    }
+    return null;
+  }
 
   function temukanKartuDanBadge() {
     const semuaElemen = document.querySelectorAll("span, div, p, small");
@@ -847,13 +859,8 @@ function pilihKategori(nama){
       const teks = el.textContent.trim().toUpperCase();
 
       if (teks.startsWith(kodeTarget + " ") || teks.startsWith(kodeTarget + "·")) {
-        let kartu = el.parentElement;
-        while (kartu && kartu !== document.body) {
-          if (kartu.querySelector("button, a") && kartu.offsetHeight > 100 && kartu.offsetWidth < 600) {
-            return { kartu, badge: el };
-          }
-          kartu = kartu.parentElement;
-        }
+        const kartu = cariKartuDariElemen(el.parentElement);
+        if (kartu) return { kartu, badge: el };
       }
     }
     return null;
@@ -887,20 +894,21 @@ function pilihKategori(nama){
     }
   }
 
-  function hapusSorotan(jedaMilidetik = 2000) {
-    if (sudahDihapus) return;
-    sudahDihapus = true;
-
-    if (observer) observer.disconnect();
+  function hapusSorotanPelan(jedaAwal = 1500) {
+    if (sudahDihapus || sedangProsesHapus) return;
+    sedangProsesHapus = true;
 
     setTimeout(() => {
+      sudahDihapus = true;
+      if (observer) observer.disconnect();
+
       const hasil = temukanKartuDanBadge();
       if (hasil) {
         const { kartu, badge } = hasil;
         const pita = kartu.querySelector(".label-materi-terkait");
         if (pita) {
           pita.style.opacity = "0";
-          setTimeout(() => pita.remove(), 800);
+          setTimeout(() => pita.remove(), 1000);
         }
         kartu.classList.remove("modul-sorot-aktif");
         badge.classList.remove("badge-modul-sorot");
@@ -908,10 +916,9 @@ function pilihKategori(nama){
 
       url.searchParams.delete("m");
       window.history.replaceState({}, "", url.pathname + url.search + url.hash);
-    }, jedaMilidetik);
+    }, jedaAwal);
   }
 
-  // Deteksi klik tombol/link Telegram (baik di kartu maupun di dalam pop-up ringkasan)
   document.addEventListener("click", (e) => {
     const targetKlik = e.target.closest("a, button");
     if (!targetKlik) return;
@@ -919,21 +926,32 @@ function pilihKategori(nama){
     const teksTombol = targetKlik.textContent.toLowerCase();
     const href = (targetKlik.getAttribute("href") || "").toLowerCase();
 
+    // 1. Jika klik Telegram (di kartu maupun di pop-up)
     if (teksTombol.includes("telegram") || href.includes("t.me")) {
       pernahBukaTelegram = true;
+      return;
+    }
+
+    // 2. Cek apakah yang diklik berada di dalam sebuah kartu materi
+    const kartuDiklik = cariKartuDariElemen(targetKlik);
+    const hasilTarget = temukanKartuDanBadge();
+
+    if (kartuDiklik && hasilTarget && kartuDiklik !== hasilTarget.kartu) {
+      // User mengklik kartu lain -> pudarkan sorotan kartu lama pelan-pelan
+      hapusSorotanPelan(400);
     }
   }, true);
 
-  // Hapus sorotan setelah kembali dari Telegram (bertahan 2 detik lalu pudar perlahan)
+  // 3. Jika kembali ke tab Pustaka Manhaj setelah membuka Telegram
   document.addEventListener("visibilitychange", () => {
     if (!document.hidden && pernahBukaTelegram) {
-      hapusSorotan(2000);
+      hapusSorotanPelan(1800);
     }
   });
 
   window.addEventListener("focus", () => {
     if (pernahBukaTelegram) {
-      hapusSorotan(2000);
+      hapusSorotanPelan(1800);
     }
   });
 
