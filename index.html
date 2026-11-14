@@ -583,7 +583,8 @@ function pilihKategori(nama){
 <script>
 <script>
 <script>
-(function initMateriPendukungAuto(){
+<script>
+(function initMateriPendukungGitHub(){
   const petaPendukung={
     'Aqidah & Manhaj':['SL-01','SL-02','SL-10','SL-11','SL-13','SL-19'],
     'Ushul Fikih':['SL-04','SL-05','SL-18','SL-23','SL-32','SL-36'],
@@ -593,64 +594,90 @@ function pilihKategori(nama){
     'Hadis Arbain':['SL-24','SL-26','SL-31']
   };
 
-  let katTerakhir='';
-  setInterval(()=>{
-    const semuaKartu=Array.from(document.querySelectorAll('.card')).filter(c=>!c.closest('#materiPendukungBox'));
-    if(!semuaKartu.length) return;
-    const kartuTampil=semuaKartu.filter(c=>c.offsetParent!==null);
-    if(!kartuTampil.length) return;
+  function cariDatabaseKartu(){
+    const semua=Array.from(document.querySelectorAll('.card'));
+    const petaKartu=new Map();
+    semua.forEach(c=>{
+      if(c.closest('#materiPendukungBox')) return;
+      const b=c.querySelector('.badge');
+      if(!b) return;
+      const kode=(b.innerText.split('·').shift()||'').trim().toUpperCase();
+      if(kode && !petaKartu.has(kode)) petaKartu.set(kode,c);
+    });
+    return petaKartu;
+  }
 
-    const katSet=new Set(kartuTampil.map(c=>{
+  let cacheKartu=null;
+  let katAktifSebelumnya='';
+
+  setInterval(()=>{
+    if(!cacheKartu || cacheKartu.size<30){
+      const sementara=cariDatabaseKartu();
+      if(sementara.size>0){
+        if(!cacheKartu) cacheKartu=new Map();
+        sementara.forEach((v,k)=>{ if(!cacheKartu.has(k)) cacheKartu.set(k,v.cloneNode(true)); });
+      }
+    }
+
+    const kartuLayar=Array.from(document.querySelectorAll('.card')).filter(c=>!c.closest('#materiPendukungBox') && c.offsetParent!==null);
+    if(!kartuLayar.length) return;
+
+    const katSet=new Set(kartuLayar.map(c=>{
       const b=c.querySelector('.badge');
       return b?(b.innerText.split('·').pop()||'').trim():'';
     }).filter(Boolean));
 
     const katAktif=katSet.size===1?Array.from(katSet).shift():'';
-    const boxAda=document.getElementById('materiPendukungBox');
+    const boxLama=document.getElementById('materiPendukungBox');
 
     if(!katAktif || !petaPendukung[katAktif]){
-      if(boxAda) boxAda.remove();
-      katTerakhir='';
+      if(boxLama) boxLama.remove();
+      katAktifSebelumnya='';
       return;
     }
-    if(katAktif===katTerakhir && boxAda) return;
-    katTerakhir=katAktif;
-    if(boxAda) boxAda.remove();
+
+    if(katAktif===katAktifSebelumnya && boxLama) return;
+    katAktifSebelumnya=katAktif;
+    if(boxLama) boxLama.remove();
 
     const daftarKode=petaPendukung[katAktif];
-    const kartuTerkait=daftarKode.map(kd=>semuaKartu.find(c=>{
-      const b=c.querySelector('.badge');
-      if(!b) return false;
-      const kodeKartu=(b.innerText.split('·').shift()||'').trim().toUpperCase();
-      return kodeKartu===kd.toUpperCase();
-    })).filter(Boolean);
+    const kartuTerkait=daftarKode.map(kd=>{
+      const kUp=kd.toUpperCase();
+      const diLayar=Array.from(document.querySelectorAll('.card')).find(c=>{
+        if(c.closest('#materiPendukungBox')) return false;
+        const b=c.querySelector('.badge');
+        return b && (b.innerText.split('·').shift()||'').trim().toUpperCase()===kUp;
+      });
+      if(diLayar) return diLayar.cloneNode(true);
+      return cacheKartu?cacheKartu.get(kUp):null;
+    }).filter(Boolean);
 
     if(!kartuTerkait.length) return;
 
-    const kartuTerakhir=kartuTampil.slice(-1).shift();
-    const container=kartuTerakhir.parentElement;
+    const kartuAkhir=kartuLayar.slice(-1).shift();
+    const wadahGrid=kartuAkhir.parentElement;
+
     const box=document.createElement('div');
     box.id='materiPendukungBox';
-    box.style.cssText='grid-column:1/-1;width:100%;margin-top:24px;padding-top:18px;border-top:1.5px solid var(--border,#e2e8f0)';
+    box.style.cssText='grid-column:1/-1;width:100%;margin-top:26px;padding-top:20px;border-top:1.5px solid var(--border,#cbd5e1)';
     box.innerHTML=`
-      <h3 style="margin:0 0 4px;font-size:1.15rem;color:var(--text,#1e293b)">📚 Materi Pendukung Lintas Modul</h3>
-      <p style="margin:0 0 14px;font-size:.86rem;color:var(--muted,#64748b)">Bacaan penguat pilihan yang berkaitan erat setelah mempelajari seri utama di atas.</p>
-      <div id="gridPendukung" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px"></div>
+      <div style="margin-bottom:14px">
+        <h3 style="margin:0 0 4px;font-size:1.15rem;color:var(--emerald,#145335)">📚 Materi Pendukung Lintas Modul</h3>
+        <p style="margin:0;font-size:.86rem;color:var(--muted,#64748b)">Bacaan penguat dari seri Selingan & Faedah yang berkaitan erat dengan modul <strong>${katAktif}</strong>.</p>
+      </div>
+      <div id="gridPendukung" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px"></div>
     `;
-    container.appendChild(box);
+    wadahGrid.appendChild(box);
 
     const grid=box.querySelector('#gridPendukung');
-    kartuTerkait.forEach(asal=>{
-      const klon=asal.cloneNode(true);
+    kartuTerkait.forEach(klon=>{
       klon.style.display='';
-      const btnAsal=asal.querySelector('button');
-      const btnKlon=klon.querySelector('button');
-      if(btnAsal && btnKlon) btnKlon.onclick=()=>btnAsal.click();
       grid.appendChild(klon);
     });
-  },300);
+  },250);
 })();
 </script>
+
 
 </body>
 </html>
