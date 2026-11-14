@@ -43,6 +43,43 @@ footer{text-align:center;padding:1.5rem;color:#6c757d;font-size:.85rem;margin-to
 .k-btn{background:var(--s);color:#fff;text-decoration:none;padding:.35rem .75rem;border-radius:5px;font-size:.8rem;font-weight:600;white-space:nowrap}
 .k-btn:hover{background:var(--p)}
 </style>
+  <link rel="preconnect" href="https://googleapis.com">
+<link rel="preconnect" href="https://gstatic.com" crossorigin>
+<link href="https://googleapis.com/css2?family=Amiri:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--emerald:#145335;--emerald-light:#1e6b43;--gold:#d4af37;--bg:#f4f7f5;--card:#ffffff;--text:#1e293b;--muted:#64748b;--border:#e2e8f0}
+  body.dark{--bg:#0f172a;--card:#1e293b;--text:#f1f5f9;--muted:#94a3b8;--border:#334155}
+  body{font-family:'Plus Jakarta Sans',sans-serif!important;background:var(--bg)!important;color:var(--text)!important;transition:background .25s,color .25s}
+  header{background:linear-gradient(135deg,#0f3d26 0%,#1b6340 55%,#134e31 100%)!important;border-bottom:3px solid var(--gold)!important;box-shadow:0 6px 20px rgba(15,61,38,.18)!important;position:relative}
+  header div:first-child,.arab,[dir="rtl"]{font-family:'Amiri',serif!important;line-height:2!important}
+  header h1{letter-spacing:-0.02em;font-weight:700!important}
+  input[type="text"],input[type="search"]{background:var(--card)!important;color:var(--text)!important;border:1.5px solid var(--border)!important;box-shadow:0 4px 14px rgba(0,0,0,.04)!important;transition:border-color .2s,box-shadow .2s!important}
+  input[type="text"]:focus,input[type="search"]:focus{border-color:var(--emerald-light)!important;box-shadow:0 4px 18px rgba(30,107,67,.15)!important;outline:none!important}
+  .card{background:var(--card)!important;border:1px solid var(--border)!important;border-left:4px solid var(--emerald-light)!important;border-radius:12px!important;box-shadow:0 2px 8px rgba(0,0,0,.04)!important;transition:transform .2s ease,box-shadow .2s ease!important}
+  .card:hover{transform:translateY(-3px)!important;box-shadow:0 10px 24px rgba(20,83,53,.12)!important}
+  .card h3{color:var(--text)!important;line-height:1.45!important}
+  #darkToggle{position:absolute;top:16px;right:18px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;padding:6px 12px;border-radius:20px;font-size:.82rem;cursor:pointer;backdrop-filter:blur(4px);transition:background .2s}
+  #darkToggle:hover{background:rgba(255,255,255,.28)}
+</style>
+<script>
+window.addEventListener('DOMContentLoaded',()=>{
+  const hdr=document.querySelector('header');
+  if(hdr && !document.getElementById('darkToggle')){
+    const btn=document.createElement('button');
+    btn.id='darkToggle';
+    btn.innerText='🌙 Mode Gelap';
+    btn.onclick=()=>{
+      document.body.classList.toggle('dark');
+      const isDark=document.body.classList.contains('dark');
+      btn.innerText=isDark?'☀️ Mode Terang':'🌙 Mode Gelap';
+      localStorage.setItem('pm_dark',isDark?'1':'0');
+    };
+    if(localStorage.getItem('pm_dark')==='1'){document.body.classList.add('dark');btn.innerText='☀️ Mode Terang';}
+    hdr.appendChild(btn);
+  }
+});
+</script>
+
 </head>
 <body>
 <header>
