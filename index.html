@@ -526,6 +526,59 @@ window.addEventListener('scroll',function(){
   if(cnt && tabSemua) tabSemua.innerText='Semua ('+cnt.innerText.trim()+')';
 })();
 </script>
+<script>
+window.addEventListener('DOMContentLoaded',()=>{
+  const searchInput=document.querySelector('input[type="text"],input[type="search"]');
+  if(!searchInput || document.getElementById('guideBox')) return;
+  const wrap=searchInput.parentElement;
+  const guide=document.createElement('div');
+  guide.id='guideBox';
+  guide.style.cssText='margin:0 auto 18px;max-width:960px;background:var(--card,#fff);border:1.5px solid #b7e4c7;border-radius:12px;overflow:hidden;box-shadow:0 3px 10px rgba(20,83,53,.06)';
+  guide.innerHTML=`
+    <button type="button" id="guideToggle" style="width:100%;display:flex;justify-content:space-between;align-items:center;padding:13px 18px;background:linear-gradient(90deg,#edf7f1,#f8fcf9);border:none;cursor:pointer;text-align:left;font-family:inherit;font-size:.95rem;font-weight:700;color:#145335">
+      <span>🧭 Baru Pertama Kali di Sini? Klik Panduan Urutan Belajar (Mulai dari Mana?)</span>
+      <span id="guideArrow" style="font-size:.85rem;transition:transform .2s">▼ Buka</span>
+    </button>
+    <div id="guideBody" style="display:none;padding:16px 18px;border-top:1px solid #d8f3dc;font-size:.9rem;line-height:1.6;color:var(--text,#1e293b)">
+      <p style="margin:0 0 12px">Menuntut ilmu syar'i hendaknya dilakukan secara <strong>bertahap dari yang paling pokok</strong>. Ikuti 4 langkah urutan belajar berikut:</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px">
+        <div style="padding:11px;border:1px solid #d8e2dc;border-radius:9px;background:var(--bg,#f8fafc)">
+          <strong style="color:#145335">1️⃣ Tahap 1: Aqidah & Tauhid</strong><br>
+          <span style="font-size:.83rem;color:var(--muted,#64748b)">Pelajari fondasi iman dan tauhid terlebih dahulu sebelum amal lainnya.</span><br>
+          <button type="button" onclick="pilihKategori('Aqidah & Manhaj')" style="margin-top:7px;padding:4px 10px;border:none;border-radius:6px;background:#1e6b43;color:#fff;font-size:.8rem;cursor:pointer">Mulai Tahap 1 →</button>
+        </div>
+        <div style="padding:11px;border:1px solid #d8e2dc;border-radius:9px;background:var(--bg,#f8fafc)">
+          <strong style="color:#145335">2️⃣ Tahap 2: Fikih Ibadah</strong><br>
+          <span style="font-size:.83rem;color:var(--muted,#64748b)">Pahami tata cara bersuci, salat, dan ibadah harian yang wajib.</span><br>
+          <button type="button" onclick="pilihKategori('Fikih Praktis')" style="margin-top:7px;padding:4px 10px;border:none;border-radius:6px;background:#1e6b43;color:#fff;font-size:.8rem;cursor:pointer">Lanjut Tahap 2 →</button>
+        </div>
+        <div style="padding:11px;border:1px solid #d8e2dc;border-radius:9px;background:var(--bg,#f8fafc)">
+          <strong style="color:#145335">3️⃣ Tahap 3: Hadis & Adab</strong><br>
+          <span style="font-size:.83rem;color:var(--muted,#64748b)">Kuasai hadis-hadis pokok agama untuk membangun akhlak mulia.</span><br>
+          <button type="button" onclick="pilihKategori('Hadis Arbain')" style="margin-top:7px;padding:4px 10px;border:none;border-radius:6px;background:#1e6b43;color:#fff;font-size:.8rem;cursor:pointer">Lanjut Tahap 3 →</button>
+        </div>
+        <div style="padding:11px;border:1px solid #d8e2dc;border-radius:9px;background:var(--bg,#f8fafc)">
+          <strong style="color:#145335">4️⃣ Tahap 4: Ilmu Alat</strong><br>
+          <span style="font-size:.83rem;color:var(--muted,#64748b)">Dalami Bahasa Arab, Ushul Fikih, dan Musthalah Hadis.</span><br>
+          <button type="button" onclick="pilihKategori('Nahwu & Sharaf')" style="margin-top:7px;padding:4px 10px;border:none;border-radius:6px;background:#1e6b43;color:#fff;font-size:.8rem;cursor:pointer">Lanjut Tahap 4 →</button>
+        </div>
+      </div>
+    </div>
+  `;
+  wrap.parentNode.insertBefore(guide,wrap);
+  document.getElementById('guideToggle').onclick=()=>{
+    const b=document.getElementById('guideBody');
+    const a=document.getElementById('guideArrow');
+    const open=b.style.display==='block';
+    b.style.display=open?'none':'block';
+    a.innerText=open?'▼ Buka':'▲ Tutup';
+  };
+});
+function pilihKategori(nama){
+  const tab=Array.from(document.querySelectorAll('button')).find(b=>b.innerText.trim()===nama);
+  if(tab){tab.click();tab.scrollIntoView({behavior:'smooth',block:'center'});}
+}
+</script>
 
 </body>
 </html>
