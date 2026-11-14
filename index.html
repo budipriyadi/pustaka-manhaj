@@ -678,6 +678,117 @@ function pilihKategori(nama){
 })();
 </script>
 
+<style>
+  .support-wrap{grid-column:1/-1;width:100%;margin-top:26px;padding-top:20px;border-top:2px solid var(--border,#cbd5e1)}
+  .support-head{margin-bottom:14px}
+  .support-head h3{margin:0 0 4px;font-size:1.18rem;color:var(--emerald,#145335);font-weight:700}
+  .support-head p{margin:0;font-size:.88rem;color:var(--muted,#64748b)}
+  .support-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+  @media(max-width:600px){.support-grid{grid-template-columns:1fr}}
+</style>
+
+<script>
+(function pustakaManhajSupportEngine(){
+  const MAP_PENDUKUNG={
+    'Musthalah Hadis':['SL-18','SL-32','SL-33','SL-34','SL-35'],
+    'Ushul Fikih':['SL-04','SL-05','SL-18','SL-23','SL-32','SL-36'],
+    'Aqidah & Manhaj':['SL-01','SL-02','SL-10','SL-11','SL-19'],
+    'Fikih Praktis':['SL-04','SL-09','SL-12','SL-25','SL-30'],
+    'Nahwu & Sharaf':['SL-06','SL-07'],
+    'Hadis Arbain':['SL-24','SL-26','SL-31']
+  };
+
+  function skorKode(kode){
+    const m=kode.toUpperCase().match(/^([A-Z-]+?)(\d+)(?:\.(\d+))?$/);
+    if(!m) return {p:kode,n1:9999,n2:0};
+    const prefUrut={'AQK-':1,'KUF-':2,'UF-':3,'FP-':4,'HA-':5,'HA-IRAB-':6,'MH-':7,'TMH-':8,'BA-':9,'SP-':10,'QR-':11};
+    const rank=prefUrut[m.at(1)]||50;
+    return {p:String(rank).padStart(2,'0')+'_'+m.at(1),n1:parseInt(m.at(2),10),n2:m.at(3)?parseInt(m.at(3),10):0};
+  }
+
+  function bandingKode(a,b){
+    const sa=skorKode(a),sb=skorKode(b);
+    if(sa.p!==sb.p) return sa.p.localeCompare(sb.p);
+    if(sa.n1!==sb.n1) return sa.n1-sb.n1;
+    return sa.n2-sb.n2;
+  }
+
+  const gudangKartu=new Map();
+  function rekamSemuaKartu(){
+    document.querySelectorAll('.card').forEach(c=>{
+      if(c.closest('.support-wrap')) return;
+      const b=c.querySelector('.badge');
+      if(!b) return;
+      const kode=(b.innerText.split('·').shift()||'').trim().toUpperCase();
+      if(kode && !gudangKartu.has(kode)){
+        gudangKartu.set(kode,c.cloneNode(true));
+      }
+    });
+  }
+
+  let kategoriTerakhir='';
+  function segarkanModul(){
+    rekamSemuaKartu();
+    const kartuAktif=Array.from(document.querySelectorAll('.card')).filter(c=>!c.closest('.support-wrap') && c.offsetParent!==null);
+    const lama=document.getElementById('materiPendukungSection');
+
+    if(!kartuAktif.length){
+      if(lama) lama.remove();
+      kategoriTerakhir='';
+      return;
+    }
+
+    const daftarKat=new Set(kartuAktif.map(c=>{
+      const b=c.querySelector('.badge');
+      return b?(b.innerText.split('·').pop()||'').trim():'';
+    }).filter(Boolean));
+
+    const modul=daftarKat.size===1?Array.from(daftarKat).shift():'';
+    if(!modul || !MAP_PENDUKUNG[modul]){
+      if(lama) lama.remove();
+      kategoriTerakhir='';
+      return;
+    }
+
+    const wadah=kartuAktif.at(-1).parentElement;
+    if(modul===kategoriTerakhir && lama && lama.parentElement===wadah) return;
+    kategoriTerakhir=modul;
+
+    if(lama) lama.remove();
+
+    const terurut=kartuAktif.slice().sort((ca,cb)=>{
+      const ka=(ca.querySelector('.badge').innerText.split('·').shift()||'').trim();
+      const kb=(cb.querySelector('.badge').innerText.split('·').shift()||'').trim();
+      return bandingKode(ka,kb);
+    });
+    terurut.forEach(k=>wadah.appendChild(k));
+
+    const kodePendukung=MAP_PENDUKUNG[modul];
+    const kartuPendukung=kodePendukung.map(kd=>gudangKartu.get(kd.toUpperCase())).filter(Boolean);
+    if(!kartuPendukung.length) return;
+
+    const sec=document.createElement('section');
+    sec.id='materiPendukungSection';
+    sec.className='support-wrap';
+    sec.innerHTML='<div class="support-head"><h3>Materi pendukung</h3><p>Bacaan penguat dari seri terkait setelah mempelajari seri utama di atas.</p></div><div class="support-grid"></div>';
+    const grid=sec.querySelector('.support-grid');
+
+    kartuPendukung.forEach(asal=>{
+      const klon=asal.cloneNode(true);
+      klon.style.display='';
+      grid.appendChild(klon);
+    });
+
+    wadah.appendChild(sec);
+  }
+
+  window.addEventListener('DOMContentLoaded',()=>{
+    rekamSemuaKartu();
+    setTimeout(segarkanModul,120);
+  });
+  setInterval(segarkanModul,250);
+})();
+</script>
 
 </body>
 </html>
