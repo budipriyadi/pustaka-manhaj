@@ -791,7 +791,12 @@ function pilihKategori(nama){
 })();
 </script>
 <style>
-  /* Gaya Modul Eye-Catching yang kontras dengan kartu putih biasa */
+  /* Transisi halus saat kartu kembali ke warna putih normal */
+  .kartu-transisi {
+    transition: background 0.4s ease, border 0.4s ease, box-shadow 0.4s ease, transform 0.4s ease !important;
+  }
+
+  /* Gaya Modul Eye-Catching saat pertama kali dibuka dari link ?m=KODE */
   .modul-sorot-aktif {
     background: linear-gradient(145deg, #fffbeb 0%, #fde68a 100%) !important;
     border: 2.5px solid #d97706 !important;
@@ -799,10 +804,8 @@ function pilihKategori(nama){
     box-shadow: 0 12px 28px rgba(180, 83, 9, 0.25) !important;
     transform: translateY(-2px);
     position: relative !important;
-    transition: all 0.3s ease !important;
   }
 
-  /* Ubah warna badge kode (UF-43 · Ushul Fikih) menjadi solid gelap agar menonjol */
   .modul-sorot-aktif .badge-modul-sorot {
     background-color: #b45309 !important;
     color: #ffffff !important;
@@ -811,7 +814,6 @@ function pilihKategori(nama){
     border-radius: 6px !important;
   }
 
-  /* Pita label di pojok kanan atas kartu */
   .label-materi-terkait {
     position: absolute;
     top: 12px;
@@ -824,24 +826,50 @@ function pilihKategori(nama){
     border-radius: 999px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
     z-index: 2;
+    transition: opacity 0.3s ease;
   }
 </style>
 
 <script>
 (() => {
-  const params = new URLSearchParams(window.location.search);
-  const kodeTarget = (params.get("m") || "").trim().toUpperCase();
+  const url = new URL(window.location.href);
+  const kodeTarget = (url.searchParams.get("m") || "").trim().toUpperCase();
   if (!kodeTarget) return;
 
+  let kartuTersorot = null;
+  let badgeTersorot = null;
+  let sudahDihapus = false;
+  let observer = null;
+
+  function hapusSorotan() {
+    if (sudahDihapus) return;
+    sudahDihapus = true;
+
+    if (observer) observer.disconnect();
+
+    if (kartuTersorot) {
+      kartuTersorot.classList.remove("modul-sorot-aktif");
+      const pita = kartuTersorot.querySelector(".label-materi-terkait");
+      if (pita) pita.remove();
+    }
+    if (badgeTersorot) {
+      badgeTersorot.classList.remove("badge-modul-sorot");
+    }
+
+    // Bersihkan parameter ?m= dari URL agar tidak menyorot ulang
+    url.searchParams.delete("m");
+    window.history.replaceState({}, "", url.pathname + url.search + url.hash);
+  }
+
   function sorotKartuTerkait() {
-    // Cari semua elemen teks/badge yang diawali kode target (misal "UF-43")
+    if (sudahDihapus || kartuTersorot) return;
+
     const semuaElemen = document.querySelectorAll("span, div, p, small");
     for (const el of semuaElemen) {
-      if (el.children.length > 0) continue; // Ambil elemen daun (teks langsung)
+      if (el.children.length > 0) continue;
       const teks = el.textContent.trim().toUpperCase();
 
       if (teks.startsWith(kodeTarget + " ") || teks.startsWith(kodeTarget + "·")) {
-        // Naik ke parent pembungkus kartu yang memiliki tombol/tautan di dalamnya
         let kartu = el.parentElement;
         while (kartu && kartu !== document.body) {
           if (kartu.querySelector("button, a") && kartu.offsetHeight > 100 && kartu.offsetWidth < 600) {
@@ -850,17 +878,21 @@ function pilihKategori(nama){
           kartu = kartu.parentElement;
         }
 
-        if (kartu && !kartu.classList.contains("modul-sorot-aktif")) {
-          kartu.classList.add("modul-sorot-aktif");
+        if (kartu) {
+          kartuTersorot = kartu;
+          badgeTersorot = el;
+
+          kartu.classList.add("kartu-transisi", "modul-sorot-aktif");
           el.classList.add("badge-modul-sorot");
 
-          // Tambahkan pita penanda jika belum ada
           if (!kartu.querySelector(".label-materi-terkait")) {
             const pita = document.createElement("span");
             pita.className = "label-materi-terkait";
             pita.textContent = "📌 Materi Terkait";
             kartu.appendChild(pita);
           }
+
+          if (observer) observer.disconnect();
 
           setTimeout(() => {
             kartu.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -871,15 +903,40 @@ function pilihKategori(nama){
     }
   }
 
+  // 1. Jika user sempat pindah tab (misal buka Telegram) lalu kembali lagi ke tab Pustaka Manhaj
+  let pernahTinggalkanTab = false;
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+      pernahTinggalkanTab = true;
+    } else if (pernahTinggalkanTab) {
+      hapusSorotan();
+    }
+  });
+
+  // 2. Jika user klik link Telegram atau berpindah kategori/filter
+  document.addEventListener("click", (e) => {
+    const targetKlik = e.target.closest("a, button");
+    if (!targetKlik) return;
+
+    const teksTombol = targetKlik.textContent.toLowerCase();
+    const href = (targetKlik.getAttribute("href") || "").toLowerCase();
+
+    if (teksTombol.includes("telegram") || href.includes("t.me")) {
+      setTimeout(hapusSorotan, 300);
+    } else if (!kartuTersorot || !kartuTersorot.contains(targetKlik)) {
+      // Klik filter kategori atau elemen navigasi di luar kartu
+      hapusSorotan();
+    }
+  });
+
   window.addEventListener("DOMContentLoaded", () => {
     sorotKartuTerkait();
-    new MutationObserver(sorotKartuTerkait).observe(document.body, {
-      childList: true,
-      subtree: true
-    });
+    observer = new MutationObserver(sorotKartuTerkait);
+    observer.observe(document.body, { childList: true, subtree: true });
   });
 })();
 </script>
+
 
 
 </body>
