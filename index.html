@@ -894,7 +894,7 @@ function pilihKategori(nama){
     }
   }
 
-  function hapusSorotanPelan(jedaAwal = 1500) {
+  function hapusSorotanPelan(jedaAwal = 1000) {
     if (sudahDihapus || sedangProsesHapus) return;
     sedangProsesHapus = true;
 
@@ -905,6 +905,9 @@ function pilihKategori(nama){
       const hasil = temukanKartuDanBadge();
       if (hasil) {
         const { kartu, badge } = hasil;
+        // Pastikan class transisi tetap aktif sebelum warna dilepas
+        kartu.classList.add("kartu-transisi");
+
         const pita = kartu.querySelector(".label-materi-terkait");
         if (pita) {
           pita.style.opacity = "0";
@@ -925,20 +928,27 @@ function pilihKategori(nama){
 
     const teksTombol = targetKlik.textContent.toLowerCase();
     const href = (targetKlik.getAttribute("href") || "").toLowerCase();
-
-    // 1. Jika klik Telegram (di kartu maupun di pop-up)
-    if (teksTombol.includes("telegram") || href.includes("t.me")) {
-      pernahBukaTelegram = true;
-      return;
-    }
-
-    // 2. Cek apakah yang diklik berada di dalam sebuah kartu materi
     const kartuDiklik = cariKartuDariElemen(targetKlik);
     const hasilTarget = temukanKartuDanBadge();
 
-    if (kartuDiklik && hasilTarget && kartuDiklik !== hasilTarget.kartu) {
-      // User mengklik kartu lain -> pudarkan sorotan kartu lama pelan-pelan
-      hapusSorotanPelan(400);
+    // 1. Jika user mengklik tombol/link di dalam KARTU MANA PUN (baik Baca Ringkasan maupun Telegram)
+    if (kartuDiklik && hasilTarget) {
+      // Jika kartu lain yang diklik (Baca Ringkasan atau Telegram), pudarkan pelan-pelan
+      if (kartuDiklik !== hasilTarget.kartu) {
+        hapusSorotanPelan(400);
+        return;
+      }
+
+      // Jika kartu target itu sendiri yang diklik tombol Telegram-nya
+      if (teksTombol.includes("telegram") || href.includes("t.me")) {
+        pernahBukaTelegram = true;
+        return;
+      }
+    }
+
+    // 2. Jika tombol Telegram diklik dari dalam pop-up ringkasan
+    if (teksTombol.includes("telegram") || href.includes("t.me")) {
+      pernahBukaTelegram = true;
     }
   }, true);
 
@@ -964,6 +974,7 @@ function pilihKategori(nama){
   });
 })();
 </script>
+
 
 
 
