@@ -937,7 +937,7 @@ function pilihKategori(nama){
     if (kartuDiklik && hasilTarget) {
       // Jika kartu lain yang diklik (Baca Ringkasan atau Telegram), pudarkan pelan-pelan
       if (kartuDiklik !== hasilTarget.kartu) {
-        hapusSorotanPelan(400);
+        hapusSorotanPelan(1000);
         return;
       }
 
