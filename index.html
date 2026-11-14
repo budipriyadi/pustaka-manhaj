@@ -582,6 +582,7 @@ function pilihKategori(nama){
 </script>
 <script>
 <script>
+<script>
 (function initMateriPendukungAuto(){
   const petaPendukung={
     'Aqidah & Manhaj':['SL-01','SL-02','SL-10','SL-11','SL-13','SL-19'],
@@ -601,10 +602,10 @@ function pilihKategori(nama){
 
     const katSet=new Set(kartuTampil.map(c=>{
       const b=c.querySelector('.badge');
-      return b?(b.innerText.split('·')[1]||'').trim():'';
+      return b?(b.innerText.split('·').pop()||'').trim():'';
     }).filter(Boolean));
 
-    const katAktif=katSet.size===1?Array.from(katSet)[0]:'';
+    const katAktif=katSet.size===1?Array.from(katSet).shift():'';
     const boxAda=document.getElementById('materiPendukungBox');
 
     if(!katAktif || !petaPendukung[katAktif]){
@@ -620,13 +621,14 @@ function pilihKategori(nama){
     const kartuTerkait=daftarKode.map(kd=>semuaKartu.find(c=>{
       const b=c.querySelector('.badge');
       if(!b) return false;
-      const kodeKartu=(b.innerText.split('·')[0]||'').trim().toUpperCase();
+      const kodeKartu=(b.innerText.split('·').shift()||'').trim().toUpperCase();
       return kodeKartu===kd.toUpperCase();
     })).filter(Boolean);
 
     if(!kartuTerkait.length) return;
 
-    const container=kartuTampil[kartuTampil.length-1].parentElement;
+    const kartuTerakhir=kartuTampil.slice(-1).shift();
+    const container=kartuTerakhir.parentElement;
     const box=document.createElement('div');
     box.id='materiPendukungBox';
     box.style.cssText='grid-column:1/-1;width:100%;margin-top:24px;padding-top:18px;border-top:1.5px solid var(--border,#e2e8f0)';
@@ -649,8 +651,6 @@ function pilihKategori(nama){
   },300);
 })();
 </script>
-
-
 
 </body>
 </html>
