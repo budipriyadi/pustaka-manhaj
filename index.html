@@ -790,6 +790,73 @@ function pilihKategori(nama){
   setInterval(segarkanModul,250);
 })();
 </script>
+<style>
+  /* Gaya eye-catching untuk kartu materi yang dituju parameter ?m=KODE */
+  .card.modul-sorot {
+    background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%) !important;
+    border: 2px solid #d97706 !important;
+    box-shadow: 0 10px 25px -5px rgba(217, 119, 6, 0.25), 0 4px 10px -2px rgba(217, 119, 6, 0.12) !important;
+    position: relative;
+    transition: all 0.35s ease;
+  }
+
+  .card.modul-sorot .badge {
+    background-color: #d97706 !important;
+    color: #ffffff !important;
+    font-weight: 700;
+  }
+
+  .card.modul-sorot::after {
+    content: "📌 Materi Terkait";
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: #b45309;
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 9px;
+    border-radius: 999px;
+    letter-spacing: 0.2px;
+  }
+</style>
+
+<script>
+(() => {
+  const params = new URLSearchParams(window.location.search);
+  const kodeTarget = (params.get("m") || "").trim().toUpperCase();
+  if (!kodeTarget) return;
+
+  function sorotKartuTerkait() {
+    const cards = document.querySelectorAll("#grid .card, .card");
+    for (const card of cards) {
+      const badge = card.querySelector(".badge");
+      if (!badge) continue;
+
+      const teksBadge = badge.textContent.trim().toUpperCase();
+      // Cocokkan kode di awal badge (misal "UF-43 · Ushul Fikih")
+      if (teksBadge.startsWith(kodeTarget + " ") || teksBadge.startsWith(kodeTarget + "·")) {
+        if (!card.classList.contains("modul-sorot")) {
+          card.classList.add("modul-sorot");
+          // Gulirkan kartu terkait ke tengah layar
+          setTimeout(() => {
+            card.scrollIntoView({ behavior: "smooth", block: "center" });
+          }, 250);
+        }
+        break;
+      }
+    }
+  }
+
+  window.addEventListener("DOMContentLoaded", () => {
+    sorotKartuTerkait();
+    const grid = document.getElementById("grid");
+    if (grid) {
+      new MutationObserver(sorotKartuTerkait).observe(grid, { childList: true });
+    }
+  });
+})();
+</script>
 
 </body>
 </html>
