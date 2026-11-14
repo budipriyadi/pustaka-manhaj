@@ -482,6 +482,13 @@ window.addEventListener('scroll',function(){
   if(b)b.style.display=window.scrollY>300?'block':'none';
 });
 </script>
+<script>
+(function sinkronJumlah(){
+  const cnt=document.getElementById('cnt');
+  const tabSemua=Array.from(document.querySelectorAll('button')).find(b=>b.innerText.trim().startsWith('Semua ('));
+  if(cnt && tabSemua) tabSemua.innerText='Semua ('+cnt.innerText.trim()+')';
+})();
+</script>
 
 </body>
 </html>
