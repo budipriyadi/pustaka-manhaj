@@ -581,6 +581,7 @@ function pilihKategori(nama){
 }
 </script>
 <script>
+<script>
 (function initMateriPendukungAkurat(){
   const petaPendukung={
     'Aqidah & Manhaj':['SL-01','SL-02','SL-10','SL-11','SL-13','SL-19'],
@@ -598,6 +599,8 @@ function pilihKategori(nama){
     if(!daftarKode || !daftarKode.length) return;
 
     const semuaKartu=Array.from(document.querySelectorAll('.card'));
+    if(!semuaKartu.length) return;
+
     const kartuTerkait=daftarKode.map(kd=>semuaKartu.find(c=>{
       const b=c.querySelector('.badge');
       if(!b) return false;
@@ -607,10 +610,11 @@ function pilihKategori(nama){
 
     if(!kartuTerkait.length) return;
 
-    const container=semuaKartu.parentElement;
+    const kartuAkhir=semuaKartu[semuaKartu.length-1];
+    const container=kartuAkhir.parentElement;
     box=document.createElement('div');
     box.id='materiPendukungBox';
-    box.style.cssText='grid-column:1/-1;margin-top:24px;padding-top:18px;border-top:1.5px solid var(--border,#e2e8f0)';
+    box.style.cssText='grid-column:1/-1;width:100%;margin-top:24px;padding-top:18px;border-top:1.5px solid var(--border,#e2e8f0)';
     box.innerHTML=`
       <h3 style="margin:0 0 4px;font-size:1.15rem;color:var(--text,#1e293b)">📚 Materi Pendukung Lintas Modul</h3>
       <p style="margin:0 0 14px;font-size:.86rem;color:var(--muted,#64748b)">Bacaan penguat pilihan yang berkaitan erat setelah mempelajari seri utama di atas.</p>
@@ -621,7 +625,7 @@ function pilihKategori(nama){
     const grid=box.querySelector('#gridPendukung');
     kartuTerkait.forEach(asal=>{
       const klon=asal.cloneNode(true);
-      klon.style.display='flex';
+      klon.style.display='';
       const btnAsal=asal.querySelector('button');
       const btnKlon=klon.querySelector('button');
       if(btnAsal && btnKlon) btnKlon.onclick=()=>btnAsal.click();
@@ -634,7 +638,7 @@ function pilihKategori(nama){
     if(!tab) return;
     const nama=tab.innerText.trim();
     if(petaPendukung[nama]){
-      setTimeout(()=>renderPendukung(nama),60);
+      setTimeout(()=>renderPendukung(nama),80);
     }else if(nama.startsWith('Semua') || tab.closest('.cats, [class*="cat"]')){
       const old=document.getElementById('materiPendukungBox');
       if(old) old.remove();
@@ -642,6 +646,7 @@ function pilihKategori(nama){
   });
 })();
 </script>
+
 
 </body>
 </html>
