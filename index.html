@@ -835,39 +835,12 @@ function pilihKategori(nama){
   const kodeTarget = (url.searchParams.get("m") || "").trim().toUpperCase();
   if (!kodeTarget) return;
 
-  let kartuTersorot = null;
-  let badgeTersorot = null;
   let sudahDihapus = false;
   let pernahBukaTelegram = false;
+  let sudahScrollAwal = false;
   let observer = null;
 
-  function hapusSorotan(jedaMilidetik = 0) {
-    if (sudahDihapus) return;
-    sudahDihapus = true;
-
-    if (observer) observer.disconnect();
-
-    setTimeout(() => {
-      if (kartuTersorot) {
-        const pita = kartuTersorot.querySelector(".label-materi-terkait");
-        if (pita) {
-          pita.style.opacity = "0";
-          setTimeout(() => pita.remove(), 800);
-        }
-        kartuTersorot.classList.remove("modul-sorot-aktif");
-      }
-      if (badgeTersorot) {
-        badgeTersorot.classList.remove("badge-modul-sorot");
-      }
-
-      url.searchParams.delete("m");
-      window.history.replaceState({}, "", url.pathname + url.search + url.hash);
-    }, jedaMilidetik);
-  }
-
-  function sorotKartuTerkait() {
-    if (sudahDihapus || kartuTersorot) return;
-
+  function temukanKartuDanBadge() {
     const semuaElemen = document.querySelectorAll("span, div, p, small");
     for (const el of semuaElemen) {
       if (el.children.length > 0) continue;
@@ -877,37 +850,68 @@ function pilihKategori(nama){
         let kartu = el.parentElement;
         while (kartu && kartu !== document.body) {
           if (kartu.querySelector("button, a") && kartu.offsetHeight > 100 && kartu.offsetWidth < 600) {
-            break;
+            return { kartu, badge: el };
           }
           kartu = kartu.parentElement;
         }
-
-        if (kartu) {
-          kartuTersorot = kartu;
-          badgeTersorot = el;
-
-          kartu.classList.add("kartu-transisi", "modul-sorot-aktif");
-          el.classList.add("badge-modul-sorot");
-
-          if (!kartu.querySelector(".label-materi-terkait")) {
-            const pita = document.createElement("span");
-            pita.className = "label-materi-terkait";
-            pita.textContent = "📌 Materi Terkait";
-            kartu.appendChild(pita);
-          }
-
-          if (observer) observer.disconnect();
-
-          setTimeout(() => {
-            kartu.scrollIntoView({ behavior: "smooth", block: "center" });
-          }, 300);
-        }
-        break;
       }
+    }
+    return null;
+  }
+
+  function terapkanSorotan() {
+    if (sudahDihapus) return;
+
+    const hasil = temukanKartuDanBadge();
+    if (!hasil) return;
+
+    const { kartu, badge } = hasil;
+
+    if (!kartu.classList.contains("modul-sorot-aktif")) {
+      kartu.classList.add("kartu-transisi", "modul-sorot-aktif");
+      badge.classList.add("badge-modul-sorot");
+
+      if (!kartu.querySelector(".label-materi-terkait")) {
+        const pita = document.createElement("span");
+        pita.className = "label-materi-terkait";
+        pita.textContent = "📌 Materi Terkait";
+        kartu.appendChild(pita);
+      }
+    }
+
+    if (!sudahScrollAwal) {
+      sudahScrollAwal = true;
+      setTimeout(() => {
+        kartu.scrollIntoView({ behavior: "smooth", block: "center" });
+      }, 300);
     }
   }
 
-  // Tandai jika user mengklik tombol/tautan Telegram
+  function hapusSorotan(jedaMilidetik = 2000) {
+    if (sudahDihapus) return;
+    sudahDihapus = true;
+
+    if (observer) observer.disconnect();
+
+    setTimeout(() => {
+      const hasil = temukanKartuDanBadge();
+      if (hasil) {
+        const { kartu, badge } = hasil;
+        const pita = kartu.querySelector(".label-materi-terkait");
+        if (pita) {
+          pita.style.opacity = "0";
+          setTimeout(() => pita.remove(), 800);
+        }
+        kartu.classList.remove("modul-sorot-aktif");
+        badge.classList.remove("badge-modul-sorot");
+      }
+
+      url.searchParams.delete("m");
+      window.history.replaceState({}, "", url.pathname + url.search + url.hash);
+    }, jedaMilidetik);
+  }
+
+  // Deteksi klik tombol/link Telegram (baik di kartu maupun di dalam pop-up ringkasan)
   document.addEventListener("click", (e) => {
     const targetKlik = e.target.closest("a, button");
     if (!targetKlik) return;
@@ -918,28 +922,31 @@ function pilihKategori(nama){
     if (teksTombol.includes("telegram") || href.includes("t.me")) {
       pernahBukaTelegram = true;
     }
-  });
+  }, true);
 
-  // Hapus sorotan secara halus (jeda 1,5 detik) saat user kembali dari Telegram
+  // Hapus sorotan setelah kembali dari Telegram (bertahan 2 detik lalu pudar perlahan)
   document.addEventListener("visibilitychange", () => {
     if (!document.hidden && pernahBukaTelegram) {
-      hapusSorotan(1500);
+      hapusSorotan(2000);
     }
   });
 
   window.addEventListener("focus", () => {
     if (pernahBukaTelegram) {
-      hapusSorotan(1500);
+      hapusSorotan(2000);
     }
   });
 
   window.addEventListener("DOMContentLoaded", () => {
-    sorotKartuTerkait();
-    observer = new MutationObserver(sorotKartuTerkait);
+    terapkanSorotan();
+    observer = new MutationObserver(() => {
+      if (!sudahDihapus) terapkanSorotan();
+    });
     observer.observe(document.body, { childList: true, subtree: true });
   });
 })();
 </script>
+
 
 
 
