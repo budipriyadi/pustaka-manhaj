@@ -582,7 +582,7 @@ function pilihKategori(nama){
 </script>
 <script>
 <script>
-(function initMateriPendukungAkurat(){
+(function initMateriPendukungAuto(){
   const petaPendukung={
     'Aqidah & Manhaj':['SL-01','SL-02','SL-10','SL-11','SL-13','SL-19'],
     'Ushul Fikih':['SL-04','SL-05','SL-18','SL-23','SL-32','SL-36'],
@@ -592,27 +592,42 @@ function pilihKategori(nama){
     'Hadis Arbain':['SL-24','SL-26','SL-31']
   };
 
-  function renderPendukung(kategori){
-    let box=document.getElementById('materiPendukungBox');
-    if(box) box.remove();
-    const daftarKode=petaPendukung[kategori];
-    if(!daftarKode || !daftarKode.length) return;
-
-    const semuaKartu=Array.from(document.querySelectorAll('.card'));
+  let katTerakhir='';
+  setInterval(()=>{
+    const semuaKartu=Array.from(document.querySelectorAll('.card')).filter(c=>!c.closest('#materiPendukungBox'));
     if(!semuaKartu.length) return;
+    const kartuTampil=semuaKartu.filter(c=>c.offsetParent!==null);
+    if(!kartuTampil.length) return;
 
+    const katSet=new Set(kartuTampil.map(c=>{
+      const b=c.querySelector('.badge');
+      return b?(b.innerText.split('·')[1]||'').trim():'';
+    }).filter(Boolean));
+
+    const katAktif=katSet.size===1?Array.from(katSet)[0]:'';
+    const boxAda=document.getElementById('materiPendukungBox');
+
+    if(!katAktif || !petaPendukung[katAktif]){
+      if(boxAda) boxAda.remove();
+      katTerakhir='';
+      return;
+    }
+    if(katAktif===katTerakhir && boxAda) return;
+    katTerakhir=katAktif;
+    if(boxAda) boxAda.remove();
+
+    const daftarKode=petaPendukung[katAktif];
     const kartuTerkait=daftarKode.map(kd=>semuaKartu.find(c=>{
       const b=c.querySelector('.badge');
       if(!b) return false;
-      const kodeKartu=(b.innerText.split('·').shift()||'').trim().toUpperCase();
+      const kodeKartu=(b.innerText.split('·')[0]||'').trim().toUpperCase();
       return kodeKartu===kd.toUpperCase();
     })).filter(Boolean);
 
     if(!kartuTerkait.length) return;
 
-    const kartuAkhir=semuaKartu[semuaKartu.length-1];
-    const container=kartuAkhir.parentElement;
-    box=document.createElement('div');
+    const container=kartuTampil[kartuTampil.length-1].parentElement;
+    const box=document.createElement('div');
     box.id='materiPendukungBox';
     box.style.cssText='grid-column:1/-1;width:100%;margin-top:24px;padding-top:18px;border-top:1.5px solid var(--border,#e2e8f0)';
     box.innerHTML=`
@@ -631,21 +646,10 @@ function pilihKategori(nama){
       if(btnAsal && btnKlon) btnKlon.onclick=()=>btnAsal.click();
       grid.appendChild(klon);
     });
-  }
-
-  document.addEventListener('click',e=>{
-    const tab=e.target.closest('button');
-    if(!tab) return;
-    const nama=tab.innerText.trim();
-    if(petaPendukung[nama]){
-      setTimeout(()=>renderPendukung(nama),80);
-    }else if(nama.startsWith('Semua') || tab.closest('.cats, [class*="cat"]')){
-      const old=document.getElementById('materiPendukungBox');
-      if(old) old.remove();
-    }
-  });
+  },300);
 })();
 </script>
+
 
 
 </body>
