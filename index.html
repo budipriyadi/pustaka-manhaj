@@ -559,7 +559,8 @@ function openM(o){
     +(k?'_('+k+')_\n\n':'\n')
     +(a?'*'+a+'*\n\n':'')
     +isi+'\n\n'
-    +'_Sumber:_\n' +linkMateri(kode)+'\n'
+    +'_Sumber Pustaka:_\n'+linkMateri(kode)+'\n'
+    +'_Arsip Telegram:_\n'+(document.getElementById('mtg')?document.getElementById('mtg').href:'https://t.me')+'\n\n'
     +'*Wassalamualaikum Warahmatullahi Wabarakatuh*';
   await navigator.clipboard.writeText(teks);
   alert('Teks siap WhatsApp berhasil disalin!');
