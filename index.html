@@ -493,6 +493,7 @@ async function copyWA(){
   const box=document.getElementById('mi');
   const ps=Array.from(box.querySelectorAll('p, li'));
   const isi=ps.map(p=>p.innerHTML
+  .replace(/<a[^>]+href=["']([^"']+)["'][^>]*>(.*?)<\/a>/gi,(m,u,txt)=>txt.replace(/<[^>]+>/g,'')+' ('+(u.startsWith('?')?location.origin+location.pathname+u:u)+')')
     .replace(/<strong[^>]*>(.*?)<\/strong>/gi,'*$1*')
     .replace(/<b[^>]*>(.*?)<\/b>/gi,'*$1*')
     .replace(/<em[^>]*>(.*?)<\/em>/gi,'_$1_')
