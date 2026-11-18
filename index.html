@@ -485,6 +485,42 @@ if(curCat==='Koleksi Kitab'){c.style.display='none';return;}
 c.style.display=((curCat==='Semua'||c.getAttribute('data-c')===curCat)&&c.innerText.toLowerCase().includes(q))?'flex':'none';
 });
 }
+  function autoLinkRujukan(html){
+  const surahMap={
+    'al-fatihah':1,'al-baqarah':2,'ali imran':3,'an-nisa':4,'al-maidah':5,'al-anam':6,'al-araf':7,'al-anfal':8,'at-taubah':9,'yunus':10,
+    'hud':11,'yusuf':12,'ar-rad':13,'ibrahim':14,'al-hijr':15,'an-nahl':16,'al-isra':17,'al-kahfi':18,'maryam':19,'taha':20,
+    'al-anbiya':21,'al-hajj':22,'al-muminun':23,'an-nur':24,'al-furqan':25,'asy-syuara':26,'an-naml':27,'al-qasas':28,'al-ankabut':29,'ar-rum':30,
+    'luqman':31,'as-sajdah':32,'al-ahzab':33,'saba':34,'fatir':35,'yasin':36,'as-saffat':37,'sad':38,'az-zumar':39,'gafir':40,'ghafir':40,
+    'fussilat':41,'asy-syura':42,'az-zukhruf':43,'ad-dukhan':44,'al-jasiyah':45,'al-ahqaf':46,'muhammad':47,'al-fath':48,'al-hujurat':49,'qaf':50,
+    'az-zariyat':51,'at-tur':52,'an-najm':53,'al-qamar':54,'ar-rahman':55,'al-waqiah':56,'al-hadid':57,'al-mujadilah':58,'al-hasyr':59,'al-mumtahanah':60,
+    'as-saff':61,'al-jumuah':62,'al-munafiqun':63,'at-tagabun':64,'at-talaq':65,'at-tahrim':66,'al-mulk':67,'al-qalam':68,'al-haqqah':69,'al-maarij':70,
+    'nuh':71,'al-jinn':72,'al-muzzammil':73,'al-muddassir':74,'al-muddatstsir':74,'al-qiyamah':75,'al-insan':76,'al-mursalat':77,'an-naba':78,'an-naziat':79,'abasa':80,
+    'at-takwir':81,'al-infitar':82,'al-mutaffifin':83,'al-insyiqaq':84,'al-buruj':85,'at-tariq':86,'al-ala':87,'al-gasyiyah':88,'al-fajr':89,'al-balad':90,
+    'asy-syams':91,'al-lail':92,'ad-duha':93,'asy-syarh':94,'at-tin':95,'al-alaq':96,'al-qadr':97,'al-bayyinah':98,'az-zalzalah':99,'al-adiyat':100,
+    'al-qariah':101,'at-takasur':102,'al-asr':103,'al-humazah':104,'al-fil':105,'quraisy':106,'al-maun':107,'al-kausar':108,'al-kafirun':109,'an-nasr':110,
+    'al-lahab':111,'al-ikhlas':112,'al-falaq':113,'an-nas':114
+  };
+  const kitabMap={
+    'bukhari':'bukhari','al-bukhari':'bukhari','muslim':'muslim',
+    'abu dawud':'abudawud','abi dawud':'abudawud',
+    'tirmizi':'tirmidhi','at-tirmizi':'tirmidhi','tirmidzi':'tirmidhi','at-tirmidzi':'tirmidhi',
+    'nasai':'nasai','an-nasai':'nasai',
+    'ibnu majah':'ibnmajah','ibn majah':'ibnmajah'
+  };
+  const norm=s=>s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[‘’'ʻ`]/g,'').replace(/ṣ/g,'s').replace(/ḥ/g,'h').replace(/ṭ/g,'t').replace(/ẓ/g,'z').replace(/ḍ/g,'d').replace(/ż/g,'z').replace(/ṡ/g,'s').replace(/\s+/g,' ').trim();
+  return html.split(/(<a\b[^>]*>.*?<\/a>|<[^>]+>)/gi).map(part=>{
+    if(!part||part.startsWith('<'))return part;
+    part=part.replace(/\bQS\.\s*([A-Za-zÀ-žĀ-ž‘’'ʻ\-]+(?:\s+[A-Za-zÀ-žĀ-ž‘’'ʻ\-]+)?)\s*(?:ayat|:)\s*(\d+)/gi,(m,nama,ayat)=>{
+      const no=surahMap[norm(nama)];
+      return no?'<a href="https://quran.com+'" target="_blank" rel="noopener">'+m+'</a>':m;
+    });
+    part=part.replace(/\b(HR\.|Ṣaḥīḥ|Shahih|Sunan|Jāmi[‘'])\s*(Al-Bukhārī|Bukhari|Muslim|Abū Dāwud|Abī Dāwud|Abu Dawud|At-Tirmiżī|At-Tirmidzi|Tirmidzi|An-Nasā[’']ī|An-Nasa'i|Ibnu Mājah|Ibn Mājah|Ibnu Majah)\s*no\.\s*(\d+[a-z]?)/gi,(m,pre,kitab,no)=>{
+      const slug=kitabMap[norm(kitab)];
+      return slug?'<a href="https://sunnah.com+'" target="_blank" rel="noopener">'+m+'</a>':m;
+    });
+    return part;
+  }).join('');
+}
 function openM(o){curItem=o;document.getElementById('mb').innerText=o.k;document.getElementById('mt').innerText=o.t;document.getElementById('ma').innerText=o.a;document.getElementById('mi').innerHTML=o.i;document.getElementById('mod').style.display='flex';}
 async function copyWA(){
   if(!curItem)return;
