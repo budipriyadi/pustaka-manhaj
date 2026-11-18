@@ -485,7 +485,7 @@ if(curCat==='Koleksi Kitab'){c.style.display='none';return;}
 c.style.display=((curCat==='Semua'||c.getAttribute('data-c')===curCat)&&c.innerText.toLowerCase().includes(q))?'flex':'none';
 });
 }
-  function autoLinkRujukan(html){
+ function autoLinkRujukan(html){
   const surahMap={
     'al-fatihah':1,'al-baqarah':2,'ali imran':3,'an-nisa':4,'al-maidah':5,'al-anam':6,'al-araf':7,'al-anfal':8,'at-taubah':9,'yunus':10,
     'hud':11,'yusuf':12,'ar-rad':13,'ibrahim':14,'al-hijr':15,'an-nahl':16,'al-isra':17,'al-kahfi':18,'maryam':19,'taha':20,
@@ -508,21 +508,23 @@ c.style.display=((curCat==='Semua'||c.getAttribute('data-c')===curCat)&&c.innerT
     'ibnu majah':'ibnmajah','ibn majah':'ibnmajah'
   };
   const norm=s=>s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[‘’'ʻ`]/g,'').replace(/ṣ/g,'s').replace(/ḥ/g,'h').replace(/ṭ/g,'t').replace(/ẓ/g,'z').replace(/ḍ/g,'d').replace(/ż/g,'z').replace(/ṡ/g,'s').replace(/\s+/g,' ').trim();
+  const baseQ='https://quran'+'.com/id/';
+  const baseS='https://sunnah'+'.com/';
   return html.split(/(<a\b[^>]*>.*?<\/a>|<[^>]+>)/gi).map(part=>{
     if(!part||part.startsWith('<'))return part;
     part=part.replace(/\bQS\.\s*([A-Za-zÀ-žĀ-ž‘’'ʻ\-]+(?:\s+[A-Za-zÀ-žĀ-ž‘’'ʻ\-]+)?)\s*(?:ayat|:)\s*(\d+)/gi,(m,nama,ayat)=>{
       const no=surahMap[norm(nama)];
-      return no?'<a href="https://quran.com+'" target="_blank" rel="noopener">'+m+'</a>':m;
+      return no?'<a href="'+baseQ+no+'/'+ayat+'" target="_blank" rel="noopener">'+m+'</a>':m;
     });
     part=part.replace(/\b(HR\.|Ṣaḥīḥ|Shahih|Sunan|Jāmi[‘'])\s*(Al-Bukhārī|Bukhari|Muslim|Abū Dāwud|Abī Dāwud|Abu Dawud|At-Tirmiżī|At-Tirmidzi|Tirmidzi|An-Nasā[’']ī|An-Nasa'i|Ibnu Mājah|Ibn Mājah|Ibnu Majah)\s*no\.\s*(\d+[a-z]?)/gi,(m,pre,kitab,no)=>{
       const slug=kitabMap[norm(kitab)];
-      return slug?'<a href="https://sunnah.com+'" target="_blank" rel="noopener">'+m+'</a>':m;
+      return slug?'<a href="'+baseS+slug+':'+no+'" target="_blank" rel="noopener">'+m+'</a>':m;
     });
     return part;
   }).join('');
 }
-function openM(o){curItem=o;document.getElementById('mb').innerText=o.k;document.getElementById('mt').innerText=o.t;document.getElementById('ma').innerText=o.a;document.getElementById('mi').innerHTML=o.i;document.getElementById('mod').style.display='flex';}
-async function copyWA(){
+function openM(o){curItem=o;document.getElementById('mb').innerText=o.k;document.getElementById('mt').innerText=o.t;document.getElementById('ma').innerText=o.a;document.getElementById('mi').innerHTML=autoLinkRujukan(o.i);document.getElementById('mod').style.display='flex';} 
+  async function copyWA(){
   if(!curItem)return;
   const {k,t,a}=curItem;
   const kode=k.split('·')[0].trim();
