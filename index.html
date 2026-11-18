@@ -412,7 +412,10 @@ BA-01|Koleksi Kitab|Percakapan Fatimah dan Aisyah|1oRYbVWiwSTbfBT_KesaA_pkydj_Oq
 <div class="arab" id="ma"></div>
 <div id="mi"></div>
 <hr style="margin:1.5rem 0;border:0;border-top:1px solid #eee">
-<button class="btn" onclick="copyWA()">📋 Salin Teks Siap WhatsApp</button>
+<div class="acts">
+  <button class="btn" onclick="copyWA()">📋 Salin Teks Siap WhatsApp</button>
+  <a id="mtg" href="https://t.me/manhaj_thalabu_ilmi" target="_blank" rel="noopener" class="btn tg">Lihat Sumber di Telegram ↗</a>
+</div>
 </div>
 </div>
 <footer>&copy; 2026 Pustaka Manhaj Thalabul Ilmi — Belajar dengan tertib, memahami dengan jernih.</footer>
@@ -523,7 +526,18 @@ c.style.display=((curCat==='Semua'||c.getAttribute('data-c')===curCat)&&c.innerT
     return part;
   }).join('');
 }
-function openM(o){curItem=o;document.getElementById('mb').innerText=o.k;document.getElementById('mt').innerText=o.t;document.getElementById('ma').innerText=o.a;document.getElementById('mi').innerHTML=autoLinkRujukan(o.i);document.getElementById('mod').style.display='flex';} 
+function openM(o){
+  curItem=o;
+  document.getElementById('mb').innerText=o.k;
+  document.getElementById('mt').innerText=o.t;
+  document.getElementById('ma').innerText=o.a;
+  document.getElementById('mi').innerHTML=autoLinkRujukan(o.i);
+  const kodeMateri=o.k.split('·')[0].trim().toUpperCase();
+  const kartu=materiByCode.get(kodeMateri);
+  const linkTg=kartu?kartu.card.querySelector('a.tg').href:'https://t.me/manhaj_thalabu_ilmi';
+  if(document.getElementById('mtg'))document.getElementById('mtg').href=linkTg;
+  document.getElementById('mod').style.display='flex';
+}
   async function copyWA(){
   if(!curItem)return;
   const {k,t,a}=curItem;
