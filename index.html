@@ -1063,5 +1063,154 @@ function pilihKategori(nama){
     <p>Kumpulan ringkasan kajian, kaidah syar'i, dan pustaka digital meliputi bidang Aqidah, Ushul Fikih, Fikih Praktis, Hadis, Al-Quran, Tafsir, Sirah, dan Bahasa Arab yang terhubung dengan kanal Telegram Manhaj Thalabul Ilmi.</p>
   </section>
 </noscript>
+<script>
+(() => {
+  function mulai() {
+    const isi = document.getElementById("mi");
+    if (!isi || document.getElementById("pmSumberTambahan")) return;
+
+    const panel = document.createElement("section");
+    panel.id = "pmSumberTambahan";
+    panel.style.cssText =
+      "margin:20px 0;padding-top:16px;border-top:1px solid #dce7e1";
+    panel.hidden = true;
+
+    const judul = document.createElement("h3");
+    judul.textContent = "Sumber dan Rujukan";
+    judul.style.cssText =
+      "font-size:16px;color:#075448;margin:0 0 12px";
+
+    const daftar = document.createElement("div");
+    daftar.style.cssText = "display:flex;flex-wrap:wrap;gap:10px";
+
+    panel.append(judul, daftar);
+    isi.insertAdjacentElement("afterend", panel);
+
+    function alamatAman(href) {
+      try {
+        const url = new URL(href, location.href);
+        return (
+          ["https:", "http:"].includes(url.protocol) &&
+          url.origin !== location.origin
+        ) ? url : null;
+      } catch {
+        return null;
+      }
+    }
+
+    function segarkan() {
+      daftar.replaceChildren();
+      const tercatat = new Set();
+
+      function tambah(href, teks) {
+        const url = alamatAman(href);
+        if (!url || tercatat.has(url.href)) return;
+        tercatat.add(url.href);
+
+        const host = url.hostname.replace(/^www\./, "");
+        let label = (teks || "").trim();
+
+        if (host === "t.me") {
+          label = "Baca postingan di Telegram";
+        } else if (!label || /^https?:\/\//i.test(label)) {
+          if (host === "sunnah.com") {
+            label = "Baca hadis — " + url.pathname.slice(1);
+          } else if (host === "quran.com") {
+            label = "Baca ayat — " + url.pathname.slice(1);
+          } else if (host === "ketabonline.com") {
+            label = "Baca rujukan kitab";
+          } else if (host === "drive.google.com") {
+            label = "Buka kitab atau PDF";
+          } else {
+            label = "Baca sumber — " + host;
+          }
+        }
+
+        const tombol = document.createElement("a");
+        tombol.href = url.href;
+        tombol.target = "_blank";
+        tombol.rel = "noopener noreferrer";
+        tombol.textContent = label;
+        tombol.title = "Buka sumber di tab baru";
+        tombol.style.cssText =
+          "display:inline-block;padding:10px 14px;" +
+          "border:1px solid #075448;border-radius:7px;" +
+          "background:#fff;color:#075448;text-decoration:none;" +
+          "font-size:14px;font-weight:700;line-height:1.5;" +
+          "overflow-wrap:anywhere";
+
+        daftar.appendChild(tombol);
+      }
+
+      /* Ambil tautan yang sudah ada dalam ringkasan. */
+      isi.querySelectorAll("a[href]").forEach(link => {
+        if (!alamatAman(link.getAttribute("href"))) return;
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        tambah(link.href, link.textContent);
+      });
+
+      /* Ambil juga URL yang masih berupa teks biasa. */
+      const walker = document.createTreeWalker(
+        isi,
+        NodeFilter.SHOW_TEXT
+      );
+
+      let node;
+      while ((node = walker.nextNode())) {
+        if (node.parentElement?.closest("a, script, style")) continue;
+
+        const urls =
+          node.textContent.match(/https?:\/\/[^\s<>"“”]+/g) || [];
+
+        urls.forEach(url => {
+          tambah(url.replace(/[.,;!?)،؛]+$/g, ""), "");
+        });
+      }
+
+      /* Sumber Telegram mengikuti materi yang sedang dibuka. */
+      const telegram = document.getElementById("mtg");
+      if (telegram) tambah(telegram.href, "Telegram");
+
+      panel.hidden = daftar.children.length === 0;
+    }
+
+    /* Perbarui tombol setiap isi ringkasan berganti. */
+    let dijadwalkan = false;
+
+    const observer = new MutationObserver(() => {
+      if (dijadwalkan) return;
+      dijadwalkan = true;
+
+      queueMicrotask(() => {
+        dijadwalkan = false;
+        segarkan();
+      });
+    });
+
+    observer.observe(isi, {
+      childList: true,
+      subtree: true,
+      characterData: true
+    });
+
+    const telegram = document.getElementById("mtg");
+    if (telegram) {
+      observer.observe(telegram, {
+        attributes: true,
+        attributeFilter: ["href"]
+      });
+    }
+
+    segarkan();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", mulai, { once: true });
+  } else {
+    mulai();
+  }
+})();
+</script>
 </body>
 </html>
