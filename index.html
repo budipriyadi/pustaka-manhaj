@@ -590,12 +590,24 @@ function bukaMateriDariLink(){
 bukaMateriDariLink();
 </script>
 
-<button id="topBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Kembali ke atas" style="display:none;position:fixed;bottom:24px;right:24px;z-index:999;width:46px;height:46px;border:none;border-radius:50%;background:#1e6b43;color:#fff;font-size:20px;font-weight:bold;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.25);transition:opacity .2s">↑</button>
+<button id="topBtn" onclick="kembaliKeAwal()" title="Tutup filter dan kembali ke tampilan awal" style="display:none;position:fixed;bottom:22px;right:22px;z-index:999;padding:11px 18px;border:none;border-radius:999px;background:#1e6b43;color:#fff;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.28);align-items:center;gap:6px">✕ Tutup · Awal</button>
 <script>
-window.addEventListener('scroll',function(){
+function kembaliKeAwal(){
+  const inp=document.getElementById('q');
+  if(inp)inp.value='';
+  const tabSemua=document.querySelector('.tab');
+  if(tabSemua)setCat('Semua',tabSemua);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function cekTombolTutup(){
   const b=document.getElementById('topBtn');
-  if(b)b.style.display=window.scrollY>300?'block':'none';
-});
+  if(!b)return;
+  const aktif=(typeof curCat!=='undefined'&&curCat!=='Semua')||(document.getElementById('q')?.value.trim().length>0)||window.scrollY>250;
+  b.style.display=aktif?'inline-flex':'none';
+}
+window.addEventListener('scroll',cekTombolTutup);
+document.addEventListener('click',cekTombolTutup);
+document.addEventListener('input',cekTombolTutup);
 </script>
 <script>
 (function sinkronJumlah(){
