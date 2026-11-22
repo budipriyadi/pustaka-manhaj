@@ -1079,28 +1079,109 @@ function pilihKategori(nama){
 <script>
 (() => {
   const drivePdf = id => "https://drive" + ".google" + ".com/file/d/" + id + "/view";
-  const rujukanSeri = {
-    AQK: { teks: "Tanya Jawab Tentang Azab dan Nikmat Qubur.", label: "Buka Kitab Tanya Jawab Azab & Nikmat Kubur", url: drivePdf("1WwYga_MexViR4eKfFpa3pVmF7WH6OHS3") },
-    FP: { teks: "Al-Fiqh al-Manhajī ‘alā Madhhab al-Imām asy-Syāfi‘ī & Al-Qawā‘id al-Fiqhiyyah.", label: "Buka Ringkasan Kaidah Fikih", url: drivePdf("1ratYo85kMrMOEpCrFmy1Nr9HqfQClIFa") },
-    KUF: { teks: "Mabādi’ Awwaliyyah fī Uṣūl al-Fiqh wa al-Qawā‘id al-Fiqhiyyah.", label: "Buka Ringkasan Mabādi’ Awwaliyyah", url: drivePdf("16hqcoXYl6xuK67jsPjdl3lb5pLpF1CLO") },
-    UF: { teks: "Manhaj Memahami Ushul Fikih & Al-Uṣūl min ‘Ilm al-Uṣūl.", label: "Buka Panduan Manhaj Ushul Fikih", url: drivePdf("12xy5LP3xrt9g3BCmv1sjSCC3INN2bj7U") },
-    BA: { teks: "Syarḥ al-Ājurrūmiyyah & An-Naḥw al-Wāḍiḥ.", label: "Buka Modul Nahwu Syarh al-Ajurumiyah", url: drivePdf("1ghH2jh0fqzuspdhJ0qgUEE2d40A7pcKz") },
-    SP: { teks: "At-Taṭbīq aṣ-Ṣarfī & Syadzā al-‘Arf fī Fann aṣ-Ṣarf.", label: "Buka Sharaf Praktis At-Tatbiq as-Sarfi", url: drivePdf("1Fbrub67fCgG-jZn8xXRi9lg5rRPcPBPt") },
-    "HA-IRAB": { teks: "Al-Arba‘ūn an-Nawawiyyah & I‘rāb al-Ḥadīṡ an-Nabawī.", label: "Buka Kaidah I‘rab & Dasar Nahwu", url: drivePdf("1pzzfuztSN8Xsh1MDKILzaAZHp6FXZmMe") },
-    HA: { teks: "Al-Arba‘ūn an-Nawawiyyah karya Imām an-Nawawī.", label: "Buka Panduan Hadis Pilihan", url: drivePdf("1XUNL14iIS8bEZo7mtW17_Fs8Qt_JydnQ") },
-    HH: { teks: "Manhaj Memahami Hadis-Hadis Hukum.", label: "Buka Manhaj Hadis-Hadis Hukum", url: drivePdf("1-1XWX8W8Bjh67TPhbusJZ1Uf4JDhO7bY") },
-    TMH: { teks: "Taysīr Muṣṭalaḥ al-Ḥadīṡ karya Dr. Maḥmūd aṭ-Ṭaḥḥān.", label: "Buka Ringkasan Taysir Musthalah al-Hadits", url: drivePdf("1szdcBJRBOt05_bHtxJr5-dxBgZ-dwbsg") },
-    MH: { teks: "Taysīr Muṣṭalaḥ al-Ḥadīṡ & Al-Mūqiẓah.", label: "Buka Ilmu Musthalah Hadis untuk Pemula", url: drivePdf("1RmFgRgMqG8TWyaYgpv0RfzQLOQFd-HjP") },
-    QR: { teks: "Tafsīr Ibnu Kaṡīr & Jawāhir al-Balāghah.", label: "Buka Balaghah Praktis Al-Qur’an", url: drivePdf("1LhGu1ARh7uJw_ymb4dX-P2IFqKvqbXh0") },
-    SL: { teks: "Pustaka Manhaj Thalabul Ilmi — Serial Faedah & Kajian Ringkas.", label: "Buka Katalog Pustaka Manhaj", url: "https://github.io" }
+  const ketabUrl = path => "https://ketabonline" + ".com/ar/books/" + path;
+  const sunnahUrl = path => "https://sunnah" + ".com/" + path;
+
+  const PUSTAKA_MODUL = {
+    AQK: {
+      teks: "Tanya Jawab Tentang Azab dan Nikmat Qubur & Syarḥ al-‘Aqīdah aṭ-Ṭaḥāwiyyah.",
+      sumber: [
+        { label: "Buka PDF Tanya Jawab Azab & Nikmat Kubur", url: drivePdf("1WwYga_MexViR4eKfFpa3pVmF7WH6OHS3") },
+        { label: "Buka Syarḥ al-‘Aqīdah aṭ-Ṭaḥāwiyyah (KetabOnline)", url: ketabUrl("1241") }
+      ]
+    },
+    FP: {
+      teks: "Al-Fiqh al-Manhajī ‘alā Madhhab al-Imām asy-Syāfi‘ī & Al-Qawā‘id al-Fiqhiyyah.",
+      sumber: [
+        { label: "Buka Al-Fiqh al-Manhajī (KetabOnline)", url: ketabUrl("5206") },
+        { label: "Buka PDF Ringkasan Kaidah Fikih", url: drivePdf("1ratYo85kMrMOEpCrFmy1Nr9HqfQClIFa") }
+      ]
+    },
+    KUF: {
+      teks: "Mabādi’ Awwaliyyah fī Uṣūl al-Fiqh wa al-Qawā‘id al-Fiqhiyyah.",
+      sumber: [
+        { label: "Buka PDF Ringkasan Mabādi’ Awwaliyyah", url: drivePdf("16hqcoXYl6xuK67jsPjdl3lb5pLpF1CLO") },
+        { label: "Buka Minhāj al-Wuṣūl — Imam al-Bayḍāwī (KetabOnline)", url: ketabUrl("25510") }
+      ]
+    },
+    UF: {
+      teks: "Uṣūl al-Fiqh alladzī lā Yasa‘ al-Faqīha Jahluhu, Minhāj al-Wuṣūl & Manhaj Memahami Ushul Fikih.",
+      sumber: [
+        { label: "Buka Uṣūl al-Fiqh — Dr. ‘Iyāḍ as-Sulamī (KetabOnline)", url: ketabUrl("4185") },
+        { label: "Buka Minhāj al-Wuṣūl — Imam al-Bayḍāwī (KetabOnline)", url: ketabUrl("25510") },
+        { label: "Buka PDF Manhaj Memahami Ushul Fikih", url: drivePdf("12xy5LP3xrt9g3BCmv1sjSCC3INN2bj7U") }
+      ]
+    },
+    BA: {
+      teks: "Syarḥ al-Ājurrūmiyyah & An-Naḥw al-Wāḍiḥ.",
+      sumber: [
+        { label: "Buka Syarḥ al-Ājurrūmiyyah (KetabOnline)", url: ketabUrl("7183") },
+        { label: "Buka PDF Modul Nahwu Syarh al-Ajurumiyah", url: drivePdf("1ghH2jh0fqzuspdhJ0qgUEE2d40A7pcKz") }
+      ]
+    },
+    SP: {
+      teks: "At-Taṭbīq aṣ-Ṣarfī & Syadzā al-‘Arf fī Fann aṣ-Ṣarf.",
+      sumber: [
+        { label: "Buka Syadzā al-‘Arf fī Fann aṣ-Ṣarf (KetabOnline)", url: ketabUrl("7326") },
+        { label: "Buka PDF Sharaf Praktis At-Tatbiq as-Sarfi", url: drivePdf("1Fbrub67fCgG-jZn8xXRi9lg5rRPcPBPt") }
+      ]
+    },
+    "HA-IRAB": {
+      teks: "Al-Arba‘ūn an-Nawawiyyah & I‘rāb al-Ḥadīṡ an-Nabawī.",
+      sumber: [
+        { label: "Buka Kitab Hadis Arbain Nawawi (Sunnah.com)", url: sunnahUrl("nawawi40") },
+        { label: "Buka PDF Kaidah I‘rab & Dasar Nahwu", url: drivePdf("1pzzfuztSN8Xsh1MDKILzaAZHp6FXZmMe") }
+      ]
+    },
+    HA: {
+      teks: "Al-Arba‘ūn an-Nawawiyyah karya Imām an-Nawawī.",
+      sumber: [
+        { label: "Buka Kitab Hadis Arbain Nawawi (Sunnah.com)", url: sunnahUrl("nawawi40") },
+        { label: "Buka PDF Panduan Hadis Pilihan", url: drivePdf("1XUNL14iIS8bEZo7mtW17_Fs8Qt_JydnQ") }
+      ]
+    },
+    HH: {
+      teks: "Manhaj Memahami Hadis-Hadis Hukum & Bulūgh al-Marām.",
+      sumber: [
+        { label: "Buka Bulūgh al-Marām (Sunnah.com)", url: sunnahUrl("bulugh") },
+        { label: "Buka PDF Manhaj Hadis-Hadis Hukum", url: drivePdf("1-1XWX8W8Bjh67TPhbusJZ1Uf4JDhO7bY") }
+      ]
+    },
+    TMH: {
+      teks: "Taysīr Muṣṭalaḥ al-Ḥadīṡ karya Dr. Maḥmūd aṭ-Ṭaḥḥān.",
+      sumber: [
+        { label: "Buka Taysīr Muṣṭalaḥ al-Ḥadīṡ (KetabOnline)", url: ketabUrl("6165") },
+        { label: "Buka PDF Ringkasan Taysir Musthalah al-Hadits", url: drivePdf("1szdcBJRBOt05_bHtxJr5-dxBgZ-dwbsg") }
+      ]
+    },
+    MH: {
+      teks: "Taysīr Muṣṭalaḥ al-Ḥadīṡ & Al-Mūqiẓah.",
+      sumber: [
+        { label: "Buka Taysīr Muṣṭalaḥ al-Ḥadīṡ (KetabOnline)", url: ketabUrl("6165") },
+        { label: "Buka PDF Ilmu Musthalah Hadis untuk Pemula", url: drivePdf("1RmFgRgMqG8TWyaYgpv0RfzQLOQFd-HjP") }
+      ]
+    },
+    QR: {
+      teks: "Tafsīr Ibnu Kaṡīr & Jawāhir al-Balāghah.",
+      sumber: [
+        { label: "Buka Jawāhir al-Balāghah (KetabOnline)", url: ketabUrl("7401") },
+        { label: "Buka PDF Balaghah Praktis Al-Qur’an", url: drivePdf("1LhGu1ARh7uJw_ymb4dX-P2IFqKvqbXh0") }
+      ]
+    },
+    SL: {
+      teks: "Pustaka Manhaj Thalabul Ilmi — Serial Faedah & Kajian Ringkas.",
+      sumber: [
+        { label: "Buka Katalog Pustaka Manhaj", url: "https://github.io" }
+      ]
+    }
   };
 
-  function ambilInfoSeri() {
+  function ambilInfoModul() {
     const badge = document.getElementById("mb")?.textContent || "";
     const kode = badge.split("·")[0].trim().toUpperCase();
-    if (kode.startsWith("HA-IRAB")) return rujukanSeri["HA-IRAB"];
+    if (kode.startsWith("HA-IRAB") || kode.startsWith("HA-I'RAB")) return PUSTAKA_MODUL["HA-IRAB"];
     const pref = kode.split("-")[0];
-    return rujukanSeri[pref] || rujukanSeri.SL;
+    return PUSTAKA_MODUL[pref] || PUSTAKA_MODUL.SL;
   }
 
   function mulai() {
@@ -1136,7 +1217,7 @@ function pilihKategori(nama){
       if (sedangProses) return;
       sedangProses = true;
 
-      const info = ambilInfoSeri();
+      const info = ambilInfoModul();
       if (isi.textContent.trim() && !/Rujukan/i.test(isi.textContent) && !isi.querySelector(".pm-auto-rujukan")) {
         const p = document.createElement("p");
         p.className = "pm-auto-rujukan";
@@ -1177,6 +1258,14 @@ function pilihKategori(nama){
         link.target = "_blank";
         link.rel = "noopener noreferrer";
         tambah(link.href, link.textContent);
+
+        const mSunnah = link.href.match(/sunnah\.com\/([a-z]+):(\d+[a-z]?)/i);
+        if (mSunnah && link.nextSibling && link.nextSibling.nodeType === 3) {
+          const mKedua = link.nextSibling.textContent.match(/^\s*(?:dan|,)\s*(\d+[a-z]?)/i);
+          if (mKedua) {
+            tambah(sunnahUrl(mSunnah[1] + ":" + mKedua[1]), "Hadis " + mSunnah[1] + " no. " + mKedua[1]);
+          }
+        }
       });
 
       const walker = document.createTreeWalker(isi, NodeFilter.SHOW_TEXT);
@@ -1187,8 +1276,8 @@ function pilihKategori(nama){
         urls.forEach(url => tambah(url.replace(/[.,;!?)،؛]+$/g, ""), ""));
       }
 
-      if (daftar.children.length === 0 && info) {
-        tambah(info.url, info.label);
+      if (info && Array.isArray(info.sumber)) {
+        info.sumber.forEach(item => tambah(item.url, item.label));
       }
 
       panel.hidden = daftar.children.length === 0;
@@ -1216,6 +1305,7 @@ function pilihKategori(nama){
   }
 })();
 </script>
+
 
 </body>
 </html>
