@@ -480,6 +480,22 @@ box.innerHTML='<div class="k-head" onclick="this.parentElement.classList.toggle(
 kWrap.appendChild(box);
 });
 grid.prepend(kWrap);
+const kBanner=document.createElement('div');
+kBanner.id='kitabBanner';
+kBanner.style.cssText='grid-column:1/-1;background:linear-gradient(135deg,#f4faf6 0%,#ffffff 100%);border:1px solid #c3e6cb;border-radius:14px;padding:1.5rem 1.75rem;margin-bottom:.5rem;box-shadow:0 4px 16px rgba(15,81,50,.06)';
+kBanner.innerHTML=`
+  <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:.5rem;margin-bottom:.4rem">
+    <span style="font-size:.75rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#198754">📚 PUSTAKA RUJUKAN DIGITAL</span>
+    <span style="background:#e8f5e9;color:#0f5132;font-size:.78rem;font-weight:700;padding:.25rem .75rem;border-radius:999px;border:1px solid #b7e4c7">✅ Gratis Cetak &amp; Sebarluaskan</span>
+  </div>
+  <h2 style="margin:.1rem 0 .45rem;font-family:'Amiri',Georgia,serif;font-size:1.75rem;color:#0f5132;line-height:1.25">Koleksi Kitab &amp; Ringkasan Pilihan</h2>
+  <p style="margin:0 0 1.1rem;color:#495057;font-size:.95rem">Jelajahi seluruh PDF kitab dan ringkasan menurut bidang ilmu. Ketuk salah satu bidang di bawah untuk membuka daftar lengkapnya.</p>
+  <div style="background:#fffdf7;border:1px solid #ead8a8;border-left:4px solid #c59b27;border-radius:10px;padding:1rem 1.2rem">
+    <div style="font-weight:700;color:#0f5132;font-size:.98rem;margin-bottom:.3rem">📜 Izin Cetak dan Berbagi (Wakaf Ilmu)</div>
+    <p style="margin:0;color:#334155;font-size:.9rem;line-height:1.6">Seluruh kitab dan materi terbitan <strong>Pustaka Manhaj Thalabul Ilmi</strong> boleh dicetak, diperbanyak, dan disebarluaskan secara gratis—baik dalam bentuk cetak maupun digital—untuk menyebarkan ilmu yang bermanfaat, dengan tetap mencantumkan nama penyusun (<strong>Budi Priyadi</strong>) serta sumbernya.</p>
+  </div>
+`;
+kWrap.prepend(kBanner);  
 const jmlMateri=document.querySelectorAll('#grid .card').length;
 const totalKitab=kitabGroups.reduce((s,g)=>s+g.items.length,0);
 document.getElementById('cntMateri').innerText=jmlMateri;
