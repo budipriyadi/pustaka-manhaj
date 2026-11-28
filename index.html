@@ -632,26 +632,34 @@ document.getElementById('cnt').innerText=jmlMateri+totalKitab;
 let curCat='Semua',curItem=null;
 function setCat(c,el){curCat=c;document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');filterAll();}
 function filterAll(){
-const q=document.getElementById('q').value.toLowerCase();
+const norm=s=>s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/usul/g,'ushul').replace(/fiqih|fiqh/g,'fikih');
+const qRaw=document.getElementById('q').value.trim();
+const q=norm(qRaw);
 const showKitab=(curCat==='Koleksi Kitab'||q.length>0);
 kWrap.style.display=showKitab?'grid':'none';
 kWrap.querySelectorAll('.k-box').forEach(box=>{
-let matchCount=0;
+let matchCount=0,totalCount=0;
 box.querySelectorAll('.k-item').forEach(it=>{
-const ok=!q||it.innerText.toLowerCase().includes(q);
+totalCount++;
+const txt=norm(it.innerText);
+const ok=!q||txt.includes(q)||(q==='ushul fikih'&&txt.includes('ushul'));
 it.style.display=ok?'flex':'none';
 if(ok)matchCount++;
 });
+const cntBadge=box.querySelector('.k-meta span:first-child');
+if(cntBadge)cntBadge.innerText=q?matchCount:totalCount;
 box.style.display=matchCount?'block':'none';
 if(q&&matchCount)box.classList.add('open');
 else if(!q)box.classList.remove('open');
 });
 document.querySelectorAll('#grid .card').forEach(c=>{
 if(curCat==='Koleksi Kitab'){c.style.display='none';return;}
-c.style.display=((curCat==='Semua'||c.getAttribute('data-c')===curCat)&&c.innerText.toLowerCase().includes(q))?'flex':'none';
+const cTxt=norm(c.innerText);
+const okQ=!q||cTxt.includes(q)||(q==='ushul fikih'&&cTxt.includes('ushul'));
+c.style.display=((curCat==='Semua'||c.getAttribute('data-c')===curCat)&&okQ)?'flex':'none';
 });
 }
- function autoLinkRujukan(html){
+
   const surahMap={
     'al-fatihah':1,'al-baqarah':2,'ali imran':3,'an-nisa':4,'al-maidah':5,'al-anam':6,'al-araf':7,'al-anfal':8,'at-taubah':9,'yunus':10,
     'hud':11,'yusuf':12,'ar-rad':13,'ibrahim':14,'al-hijr':15,'an-nahl':16,'al-isra':17,'al-kahfi':18,'maryam':19,'taha':20,
