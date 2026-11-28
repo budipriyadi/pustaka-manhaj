@@ -659,7 +659,7 @@ const okQ=!q||cTxt.includes(q)||(q==='ushul fikih'&&cTxt.includes('ushul'));
 c.style.display=((curCat==='Semua'||c.getAttribute('data-c')===curCat)&&okQ)?'flex':'none';
 });
 }
-
+function autoLinkRujukan(html){
   const surahMap={
     'al-fatihah':1,'al-baqarah':2,'ali imran':3,'an-nisa':4,'al-maidah':5,'al-anam':6,'al-araf':7,'al-anfal':8,'at-taubah':9,'yunus':10,
     'hud':11,'yusuf':12,'ar-rad':13,'ibrahim':14,'al-hijr':15,'an-nahl':16,'al-isra':17,'al-kahfi':18,'maryam':19,'taha':20,
