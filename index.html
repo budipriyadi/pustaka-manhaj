@@ -18,43 +18,77 @@
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://budipriyadi.github.io/pustaka-manhaj/">
 <style>
-:root{--p:#0f5132;--s:#198754;--bg:#f8f9fa;--t:#212529;--b:#dee2e6}
-body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:var(--t);margin:0;line-height:1.6}
-header{background:var(--p);color:#fff;padding:1.2rem 1rem;text-align:center}
-header h1{margin:.25rem 0;font-size:1.75rem}
-.stats{display:inline-flex;gap:1rem;background:rgba(255,255,255,.15);padding:.35rem 1.1rem;border-radius:20px;font-size:.88rem;margin-top:.4rem}
-.wrap{max-width:1040px;margin:0 auto;padding:1rem 1rem}
-.sbox input{width:100%;box-sizing:border-box;padding:.72rem 1rem;border:1px solid var(--b);border-radius:8px;font-size:1rem;margin-bottom:.75rem}
-.tabs{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:2.2rem}
-.tab{background:#fff;border:1px solid var(--b);padding:.4rem .85rem;border-radius:20px;cursor:pointer;font-size:.85rem;color:#495057}
-.tab.active,.tab:hover{background:var(--p);color:#fff;border-color:var(--p);font-weight:600}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:1rem}
-.card{background:#fff;border:1px solid var(--b);border-radius:8px;padding:1.2rem;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 2px 4px rgba(0,0,0,.03)}
-.badge{display:inline-block;background:#e8f5e9;color:var(--p);font-size:.75rem;font-weight:700;padding:.2rem .6rem;border-radius:4px;margin-bottom:.5rem;width:fit-content}
-.card h3{margin:.2rem 0 1rem;font-size:1.05rem;color:#1a1a1a}
+@import url('https://googleapis.com');
+:root{--p:#0f5132;--p2:#0a3b24;--s:#198754;--bg:#fbf9f4;--card:#ffffff;--t:#1e293b;--muted:#64748b;--b:#e2e8f0;--cream:#f5f0e6}
+body.dark{--bg:#0f172a;--card:#1e293b;--t:#f1f5f9;--muted:#94a3b8;--b:#334155;--cream:#1e293b}
+*{box-sizing:border-box}
+body{font-family:'Plus Jakarta Sans','Segoe UI',sans-serif;background:var(--bg);color:var(--t);margin:0;line-height:1.65;transition:background .25s,color .25s}
+
+/* Bilah Navigasi Atas */
+.navbar{position:sticky;top:0;z-index:90;background:rgba(255,255,255,.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--b);padding:.75rem 1.25rem}
+body.dark .navbar{background:rgba(15,23,42,.95)}
+.nav-in{max-width:1140px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:.75rem;text-decoration:none;color:var(--t);cursor:pointer}
+.brand-logo{width:40px;height:40px;border-radius:10px;background:var(--p);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Amiri',serif;font-size:1.35rem;font-weight:700;box-shadow:0 2px 6px rgba(15,81,50,.2)}
+.brand-txt strong{display:block;font-size:1rem;color:var(--p);line-height:1.2}
+body.dark .brand-txt strong{color:#6ee7b7}
+.brand-txt span{font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.nav-links{display:flex;align-items:center;gap:1.1rem;flex-wrap:wrap}
+.nav-links a{text-decoration:none;color:var(--t);font-size:.88rem;font-weight:600;cursor:pointer}
+.nav-links a:hover{color:var(--p)}
+.btn-tg{background:var(--p);color:#fff!important;padding:.45rem 1rem;border-radius:999px;font-size:.85rem!important}
+.btn-dm{background:var(--cream);border:1px solid var(--b);color:var(--t);padding:.4rem .8rem;border-radius:999px;font-size:.82rem;font-weight:600;cursor:pointer}
+
+/* Hero Editorial 2 Kolom */
+header{background:linear-gradient(180deg,#f7f3ea 0%,var(--bg) 100%);border-bottom:1px solid var(--b);padding:1.4rem 1.25rem 2rem;text-align:left;color:var(--t)}
+body.dark header{background:linear-gradient(180deg,#162033 0%,var(--bg) 100%)}
+.hero-top{text-align:center;margin-bottom:1.35rem}
+.hero-basmalah{font-family:'Amiri',serif;font-size:1.65rem;color:var(--p);font-weight:700;line-height:1.4}
+body.dark .hero-basmalah{color:#6ee7b7}
+.hero-salam{font-family:'Amiri',serif;font-size:1.05rem;color:var(--muted)}
+.hero-grid{max-width:1140px;margin:0 auto;display:grid;grid-template-columns:1.15fr .85fr;gap:2rem;align-items:center}
+@media(max-width:860px){.hero-grid{grid-template-columns:1fr;gap:1.25rem}}
+.pill-author{display:inline-block;background:#e6f4ea;color:var(--p);border:1px solid #b7e4c7;padding:.35rem .9rem;border-radius:10px;font-size:.82rem;font-weight:700;margin-bottom:.7rem}
+.pill-author small{display:block;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:#198754}
+.hero-kicker{font-size:.75rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#198754;margin-bottom:.2rem}
+header h1{font-family:'Amiri',Georgia,serif;font-size:2.85rem;line-height:1.12;margin:.1rem 0 .6rem;color:#0f291e}
+body.dark header h1{color:#f8fafc}
+.hero-desc{font-size:1rem;color:var(--muted);max-width:520px;margin:0 0 1.1rem}
+.hero-actions{display:flex;flex-wrap:wrap;gap:.75rem;align-items:center}
+.btn-start{background:var(--p);color:#fff;border:none;padding:.7rem 1.25rem;border-radius:10px;font-weight:700;font-size:.92rem;cursor:pointer;box-shadow:0 4px 12px rgba(15,81,50,.18)}
+.stats{display:inline-flex;flex-wrap:wrap;gap:.55rem;background:var(--card);border:1px solid var(--b);color:var(--t);padding:.5rem .95rem;border-radius:10px;font-size:.84rem;box-shadow:0 2px 6px rgba(0,0,0,.03)}
+
+/* Kotak Pencarian Kanan */
+.search-card{background:var(--card);border:1px solid var(--b);border-radius:16px;padding:1.4rem;box-shadow:0 8px 24px rgba(15,81,50,.06)}
+.search-card h2{margin:0 0 .75rem;font-size:1.05rem;color:var(--t)}
+.sbox{display:flex;gap:.5rem;margin-bottom:.75rem}
+.sbox input{flex:1;padding:.75rem 1rem;border:1px solid var(--b);border-radius:10px;font-size:.95rem;background:var(--bg);color:var(--t);margin:0}
+.sbox input:focus{outline:none;border-color:var(--p)}
+.btn-cari{background:var(--p);color:#fff;border:none;padding:0 1.2rem;border-radius:10px;font-weight:700;cursor:pointer}
+.quick-tags{display:flex;flex-wrap:wrap;align-items:center;gap:.45rem;font-size:.8rem;color:var(--muted)}
+.qtag{background:#eef7f1;color:var(--p);border:1px solid #cbe7d5;padding:.22rem .65rem;border-radius:999px;font-weight:700;cursor:pointer;font-size:.78rem}
+.qtag:hover{background:var(--p);color:#fff}
+
+/* Kelas Asli Konten, Kartu & Pop-up */
+.wrap{max-width:1140px;margin:0 auto;padding:1.5rem 1.25rem 3rem}
+.tabs{display:flex;flex-wrap:wrap;gap:.45rem;margin-bottom:1.5rem}
+.tab{background:var(--card);border:1px solid var(--b);padding:.45rem .9rem;border-radius:999px;cursor:pointer;font-size:.85rem;color:var(--t);font-weight:500}
+.tab.active,.tab:hover{background:var(--p);color:#fff;border-color:var(--p);font-weight:700}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.1rem}
+.card{background:var(--card);border:1px solid var(--b);border-radius:12px;padding:1.25rem;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 2px 8px rgba(0,0,0,.03);transition:transform .15s,box-shadow .15s}
+.card:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(15,81,50,.08)}
+.badge{display:inline-block;background:#e8f5e9;color:var(--p);font-size:.75rem;font-weight:700;padding:.22rem .65rem;border-radius:6px;margin-bottom:.5rem;width:fit-content}
+.card h3{margin:.2rem 0 1rem;font-size:1.05rem;color:var(--t);line-height:1.45}
 .acts{display:flex;gap:.5rem}
-.btn{background:var(--s);color:#fff;border:none;padding:.55rem .9rem;border-radius:5px;cursor:pointer;font-weight:600;text-align:center;text-decoration:none;display:inline-block;font-size:.85rem;flex:1}
+.btn{flex:1;background:var(--s);color:#fff;border:none;padding:.55rem .9rem;border-radius:8px;cursor:pointer;font-weight:700;text-align:center;text-decoration:none;font-size:.85rem}
 .btn:hover{background:var(--p)}
-.tg{background:#0088cc}.tg:hover{background:#006699}
-.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);justify-content:center;align-items:center;padding:1rem;z-index:999}
-.mbody{background:#fff;max-width:640px;width:100%;max-height:85vh;overflow-y:auto;border-radius:8px;padding:1.5rem;position:relative}
-.close{position:absolute;top:1rem;right:1rem;font-size:1.5rem;cursor:pointer;border:none;background:none}
-.arab{font-size:1.4rem;text-align:right;background:#f1f8f5;padding:1rem;border-radius:6px;margin:1rem 0;line-height:1.8}
-.prof{background:#fff;border:1px solid var(--b);border-radius:8px;padding:1.5rem;margin-top:2.5rem}
-footer{text-align:center;padding:1.5rem;color:#6c757d;font-size:.85rem;margin-top:2rem;border-top:1px solid var(--b)}
-.k-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1rem;grid-column:1/-1}
-.k-box{background:#fff;border:1px solid var(--b);border-radius:10px;overflow:hidden;box-shadow:0 2px 5px rgba(0,0,0,.03)}
-.k-head{padding:1rem 1.2rem;display:flex;justify-content:space-between;align-items:center;cursor:pointer;background:#fff;transition:.2s}
-.k-head:hover{background:#f1f8f5}
-.k-title{display:flex;align-items:center;gap:.65rem;font-weight:700;color:#1a1a1a;font-size:1rem}
-.k-code{background:var(--p);color:#fff;font-size:.75rem;padding:.2rem .55rem;border-radius:5px;font-weight:700}
-.k-meta{display:flex;align-items:center;gap:.5rem;color:var(--p);font-size:.85rem;font-weight:600}
-.k-list{display:none;border-top:1px solid var(--b);background:#fafcfb;padding:.5rem 1.2rem}
-.k-box.open .k-list{display:block}
-.k-item{display:flex;justify-content:space-between;align-items:center;gap:.8rem;padding:.75rem 0;border-bottom:1px solid #edf0f2;font-size:.92rem}
-.k-item:last-child{border-bottom:none}
-.k-btn{background:var(--s);color:#fff;text-decoration:none;padding:.35rem .75rem;border-radius:5px;font-size:.8rem;font-weight:600;white-space:nowrap}
-.k-btn:hover{background:var(--p)}
+.tg{background:#0284c7}.tg:hover{background:#0369a1}
+.modal{display:none;position:fixed;inset:0;background:rgba(15,23,42,.6);z-index:100;justify-content:center;align-items:center;padding:1rem}
+.modal.open{display:flex}
+.mbody{background:var(--card);color:var(--t);max-width:680px;width:100%;max-height:86vh;overflow-y:auto;border-radius:14px;padding:1.5rem;position:relative;box-shadow:0 20px 40px rgba(0,0,0,.2)}
+.mhead{display:flex;justify-content:space-between;align-items:center;gap:.75rem;margin-bottom:.75rem}
+.mclose{background:var(--cream);color:var(--t);border:1px solid var(--b);border-radius:8px;padding:.35rem .75rem;cursor:pointer;font-weight:700}
+.ar{font-family:'Amiri',serif;font-size:1.45rem;direction:rtl;text-align:right;background:var(--cream);padding:.85rem 1rem;border-radius:10px;margin:.85rem 0;line-height:2}
 </style>
   <link rel="preconnect" href="https://googleapis.com">
 <link rel="preconnect" href="https://gstatic.com" crossorigin>
@@ -95,18 +129,58 @@ window.addEventListener('DOMContentLoaded',()=>{
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://w3.org' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23145335'/%3E%3Cpath d='M18 18h12a4 4 0 0 1 4 4v26a3 3 0 0 0-3-3H18V18zm28 0H34a4 4 0 0 0-4 4v26a3 3 0 0 1 3-3h13V18z' fill='%23ffffff'/%3E%3Crect x='14' y='50' width='36' height='3' rx='1.5' fill='%23d4af37'/%3E%3C/svg%3E">
 </head>
 <body>
+<nav class="navbar">
+  <div class="nav-in">
+    <a class="brand" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+      <div class="brand-logo">م</div>
+      <div class="brand-txt">
+        <strong>Pustaka Manhaj</strong>
+        <span>Thalabul Ilmi</span>
+      </div>
+    </a>
+    <div class="nav-links">
+      <a onclick="window.scrollTo({top:0,behavior:'smooth'})">Beranda</a>
+      <a onclick="document.querySelector('.tabs .tab').click();document.querySelector('.wrap').scrollIntoView({behavior:'smooth'})">Semua Materi</a>
+      <a onclick="setCat('Koleksi Kitab',document.querySelectorAll('.tabs .tab')[1]);document.querySelector('.wrap').scrollIntoView({behavior:'smooth'})">Koleksi Kitab</a>
+      <a class="btn-tg" href="https://t.me" target="_blank" rel="noopener">Telegram ↗</a>
+    </div>
+  </div>
+</nav>
+
 <header>
-<div style="font-size:1.4rem">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</div>
-<h1>Pustaka Manhaj Thalabul Ilmi</h1>
-<div style="margin:.45rem auto .75rem;display:inline-flex;align-items:center;gap:.5rem;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.28);padding:.32rem 1.1rem;border-radius:999px;font-family:'Amiri',Georgia,serif;font-size:1.25rem;font-weight:700;letter-spacing:.03em;color:#fef3c7">
-  <span>✨</span><span>Ilmu adalah Cahaya</span>
-</div>
-<p>Kumpulan Materi Ringkas Aqidah, Ushul Fikih, Fikih, Hadis, Al-Quran, dan Bahasa Arab</p>
-<p style="font-size:0.92rem;opacity:0.92;margin-top:4px;font-weight:500">✍️ Penyusun: Budi Priyadi</p>
-<div class="stats"><span>📚 <strong id="cnt">291</strong> Total (<strong id="cntMateri">209</strong> Materi Kajian &amp; <strong id="cntKitab">82</strong> Kitab)</span><span>•</span><span>🗂️ <strong>9</strong> Bidang Ilmu</span></div>
+  <div class="hero-top">
+    <div class="hero-basmalah">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
+    <div class="hero-salam">السَّلَامُ عَلَيْكُمْ وَرَحْمَةُ اللَّهِ وَبَرَكَاتُهُ</div>
+  </div>
+  <div class="hero-grid">
+    <div>
+      <div class="pill-author"><small>PUSTAKA MANHAJ</small>Budi Priyadi</div>
+      <div class="hero-kicker">PUSTAKA PEMBELAJARAN ISLAM</div>
+      <h1>Ilmu adalah Cahaya</h1>
+      <p class="hero-desc">Kumpulan materi ringkas Aqidah, Ushul Fikih, Hadis, Fikih, Al-Qur’an, dan Bahasa Arab dari kanal Manhaj Thalabul Ilmi.</p>
+      <div class="hero-actions">
+        <button class="btn-start" onclick="document.querySelector('.wrap').scrollIntoView({behavior:'smooth'})">Pilih bacaan pertama ↓</button>
+        <div class="stats"><span>📚 <strong id="cnt">299</strong> Total (<strong id="cntMateri">215</strong> Materi &amp; <strong id="cntKitab">84</strong> Kitab)</span><span>•</span><span>🗂️ <strong>9</strong> Bidang</span></div>
+      </div>
+    </div>
+    <div class="search-card">
+      <h2>Cari dalam pustaka</h2>
+      <div class="sbox">
+        <input type="text" id="q" placeholder="Cari kode, judul, atau topik..." oninput="filterAll()">
+        <button class="btn-cari" onclick="filterAll()">Cari</button>
+      </div>
+      <div class="quick-tags">
+        <span>Coba:</span>
+        <span class="qtag" onclick="document.getElementById('q').value='Ushul Fikih';filterAll();document.querySelector('.wrap').scrollIntoView({behavior:'smooth'})">Ushul Fikih</span>
+        <span class="qtag" onclick="document.getElementById('q').value='FP-09';filterAll();document.querySelector('.wrap').scrollIntoView({behavior:'smooth'})">FP-09</span>
+        <span class="qtag" onclick="document.getElementById('q').value='FQ-30';filterAll();document.querySelector('.wrap').scrollIntoView({behavior:'smooth'})">FQ-30</span>
+        <span class="qtag" onclick="document.getElementById('q').value='AQ-03';filterAll();document.querySelector('.wrap').scrollIntoView({behavior:'smooth'})">AQ-03</span>
+      </div>
+    </div>
+  </div>
 </header>
+
 <div class="wrap">
-<div class="sbox"><input type="text" id="q" placeholder="Cari judul kitab, kode, atau materi kajian..." oninput="filterAll()"></div>
 <div class="tabs">
 <button class="tab active" onclick="setCat('Semua',this)">Semua (266)</button>
 <button class="tab" onclick="setCat('Koleksi Kitab',this)">📚 Koleksi Kitab (84)</button>
