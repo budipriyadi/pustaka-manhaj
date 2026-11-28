@@ -141,6 +141,22 @@ body.dark header{background:linear-gradient(180deg,#162033 0%,#0f172a 100%)!impo
 #kWrap li a{background:var(--p);color:#fff!important;padding:.3rem .7rem;border-radius:6px;text-decoration:none;font-size:.8rem;font-weight:700;white-space:nowrap}
 
 </style>
+<style>
+#kWrap{background:var(--card)!important;border:1px solid var(--b)!important;border-radius:14px!important;padding:1.25rem!important}
+#kWrap>div:not(#kitabBanner){background:var(--bg);border:1px solid var(--b);border-radius:10px;padding:.85rem 1rem;margin-top:.75rem}
+#kWrap>div:not(#kitabBanner)>div:first-child{display:flex;justify-content:space-between;align-items:center;cursor:pointer;font-weight:700;color:var(--p);gap:.5rem}
+#kWrap a{display:inline-block;background:var(--p);color:#fff!important;padding:.25rem .65rem;border-radius:6px;text-decoration:none;font-size:.78rem;font-weight:700;margin-left:.5rem}
+#kWrap a:hover{background:var(--p2)}
+</style>
+<script>
+document.addEventListener('click',e=>{
+  const hdr=e.target.closest('#kWrap > div:not(#kitabBanner) > div:first-child');
+  if(!hdr)return;
+  const list=hdr.nextElementSibling;
+  if(list)list.style.display=list.style.display==='none'?'':'none';
+});
+</script>
+  
 </head>
 <body>
 <nav class="navbar">
