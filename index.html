@@ -132,6 +132,14 @@ window.addEventListener('DOMContentLoaded',()=>{
 header{background:linear-gradient(180deg,#f7f3ea 0%,#fbf9f4 100%)!important;border-bottom:1px solid #e2e8f0!important;padding:1.4rem 1.25rem 2rem!important;text-align:left!important;color:#1e293b!important}
 body.dark header{background:linear-gradient(180deg,#162033 0%,#0f172a 100%)!important;color:#f1f5f9!important}
 #kitabWrap,#kWrap,#grid>div:not(.card){grid-column:1/-1!important;width:100%!important;max-width:100%!important;margin-bottom:.75rem}
+#kWrap{background:var(--card);border:1px solid var(--b);border-radius:14px;padding:1.25rem}
+#kWrap details{border:1px solid var(--b);border-radius:10px;padding:.75rem 1rem;margin-top:.75rem;background:var(--bg)}
+#kWrap summary{display:flex;justify-content:space-between;align-items:center;cursor:pointer;font-weight:700;color:var(--p);list-style:none}
+#kWrap summary::-webkit-details-marker{display:none}
+#kWrap ul,#kWrap ol{margin:.75rem 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:.5rem;max-height:none!important;overflow:visible!important}
+#kWrap li{display:flex;justify-content:space-between;align-items:center;gap:.75rem;padding:.5rem .75rem;background:var(--card);border:1px solid var(--b);border-radius:8px;font-size:.9rem}
+#kWrap li a{background:var(--p);color:#fff!important;padding:.3rem .7rem;border-radius:6px;text-decoration:none;font-size:.8rem;font-weight:700;white-space:nowrap}
+
 </style>
 </head>
 <body>
